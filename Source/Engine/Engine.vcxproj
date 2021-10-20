@@ -99,7 +99,7 @@
     </Link>
     <PostBuildEvent>
       <Command>mkdir "$(SolutionDir)\lib\" 
-copy "$(TargetPath" "$(SolutionDir)\lib\"
+copy "$(TargetPath)" "$(SolutionDir)\lib\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -124,7 +124,7 @@ copy "$(TargetPath" "$(SolutionDir)\lib\"
     </Link>
     <PostBuildEvent>
       <Command>mkdir "$(SolutionDir)\lib\" 
-copy "$(TargetPath" "$(SolutionDir)\lib\"
+copy "$(TargetPath)" "$(SolutionDir)\lib\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
