@@ -16,6 +16,8 @@
 #include <DirectXPackedVector.h>
 #include <wrl.h>
 
+#include <d3dx11effect.h>
+
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 using namespace Microsoft::WRL;
@@ -59,5 +61,9 @@ private:
     UINT m_ClientWidth;
     UINT m_ClientHeight;
     UINT m_AspectRatio;
+
+    //Graphics Flags
+    bool m_bEnable4xMSAA = true;
+    bool m_bEnableDepthStencil = true;
 
 };

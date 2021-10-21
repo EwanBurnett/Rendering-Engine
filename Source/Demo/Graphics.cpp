@@ -12,22 +12,28 @@ D3D11_Graphics::D3D11_Graphics(HWND &hWnd, UINT width, UINT height)
     m_MSAAQuality = 1;
 
     if (!Init()) {
-        //do something bad
+        MessageBox(m_hWnd, L"Error:\nD3D11 Graphics Initialization Failed", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
+        PostQuitMessage(0xdeadbeef);
     }
 }
 
 D3D11_Graphics::~D3D11_Graphics()
 {
-    m_pDevice->Release();
-    m_pContext->Release();
+    m_pRenderTargetView->Release();
+    m_pDepthStencilView->Release();
     m_pSwapChain->Release();
-    //m_pDepthStencilBuffer->Release();
-    //m_pRenderTargetView->Release();
-    //m_pDepthStencilView->Release();
+    if (m_pSwapChain != nullptr) {
+       // m_pSwapChain->Release();
+    }
+
+    if (m_pDevice != nullptr) {
+        m_pDevice->Release();
+    }
 }
 
 bool D3D11_Graphics::Init()
 {
+    //Create the Device
     UINT createDeviceFlags = 0;
 #if defined(DEBUG) | defined(_DEBUG)
     createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
@@ -83,9 +89,15 @@ bool D3D11_Graphics::Init()
     sd.Windowed = true;
     sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
     sd.Flags = 0;
-    sd.SampleDesc.Count = m_MSAACount;
-    sd.SampleDesc.Quality = m_MSAAQuality - 1;
-
+    if (m_bEnable4xMSAA) {
+        sd.SampleDesc.Count = m_MSAACount;
+        sd.SampleDesc.Quality = m_MSAAQuality - 1;
+    }
+    else {
+        sd.SampleDesc.Count = 1;
+        sd.SampleDesc.Quality = 0;
+    }
+   
     //Swap Chain Creation
     IDXGIDevice* dxgiDevice = 0;
     hr = m_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
@@ -115,49 +127,65 @@ bool D3D11_Graphics::Init()
         return false;
     }
 
-    dxgiFactory->Release();
-    dxgiAdapter->Release();
     dxgiDevice->Release();
+    dxgiAdapter->Release();
+    dxgiFactory->Release();
 
     //TODO: Add HR checks (? or take some out)
     ID3D11Texture2D* backBuffer = nullptr;
     m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer);
+    backBuffer->GetDesc(&m_BackBufferDesc);
     m_pDevice->CreateRenderTargetView(backBuffer, nullptr, &m_pRenderTargetView);
 
     backBuffer->Release();
-    m_pSwapChain->Release();
-    m_pDevice->Release();
+    //m_pSwapChain->Release();
+    //m_pDevice->Release();
 
-    //Depth-Stencil Buffer Creation
-    D3D11_TEXTURE2D_DESC dsd = { 0 };
-    dsd.Width = m_ClientWidth;
-    dsd.Height = m_ClientHeight;
-    dsd.MipLevels = 1;
-    dsd.ArraySize = 1;
-    dsd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    dsd.SampleDesc.Count = m_MSAACount;
-    dsd.SampleDesc.Quality = m_MSAAQuality - 1;
-    dsd.Usage = D3D11_USAGE_DEFAULT;
-    dsd.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    if (m_bEnableDepthStencil == true) {
 
-    ID3D11Texture2D* depthStencilBuffer;
-    hr = m_pDevice->CreateTexture2D(&dsd, nullptr, &depthStencilBuffer);
+        //Depth-Stencil Buffer Creation
+        D3D11_TEXTURE2D_DESC dsd = { 0 };
+        dsd.Width = m_ClientWidth;
+        dsd.Height = m_ClientHeight;
+        dsd.MipLevels = 1;
+        dsd.ArraySize = 1;
+        dsd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-    if (FAILED(hr)) {
-        MessageBox(m_hWnd, L"Error:\nDepth Stencil Buffer Texture Creation Failed", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
-        return false;
+        if (m_bEnable4xMSAA) {
+            dsd.SampleDesc.Count = m_MSAACount;
+            dsd.SampleDesc.Quality = m_MSAAQuality - 1;
+        }
+        else {
+            dsd.SampleDesc.Count = 1;
+            dsd.SampleDesc.Quality = 0;
+        }
+
+        dsd.Usage = D3D11_USAGE_DEFAULT;
+        dsd.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+        ID3D11Texture2D* depthStencilBuffer;
+        hr = m_pDevice->CreateTexture2D(&dsd, nullptr, &depthStencilBuffer);
+
+        if (FAILED(hr)) {
+            MessageBox(m_hWnd, L"Error:\nDepth Stencil Buffer Texture Creation Failed", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
+            return false;
+        }
+
+
+        D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
+        dsvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+        dsvd.Texture2D.MipSlice = 0;
+        dsvd.Flags = 0;
+
+        m_pDevice->CreateDepthStencilView(depthStencilBuffer, &dsvd, &m_pDepthStencilView);
+        
+        
+        depthStencilBuffer->Release();
     }
 
-
-    D3D11_DEPTH_STENCIL_VIEW_DESC dsvd;
-    dsvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
-    dsvd.Texture2D.MipSlice = 0;
-    dsvd.Flags = 0;
-
-    m_pDevice->CreateDepthStencilView(depthStencilBuffer, &dsvd, &m_pDepthStencilView);
-
-    depthStencilBuffer->Release();
+    //Bind our views to the Output Merger
+    m_pContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 
     //Setting Viewport
     D3D11_VIEWPORT vp;
@@ -168,10 +196,16 @@ bool D3D11_Graphics::Init()
     vp.MinDepth = 0.0f;
     vp.MaxDepth = 1.0f;
 
+
+    //Compile Shaders 
+     
+    
     //Init Test - TODO: Remove this
-    const float clr[4] = { 0.3, 0.4, 0.5, 1.0 };
+    const float clr[4] = { 0.3f, 0.4f, 0.5f, 1.0f };
     m_pContext->ClearRenderTargetView(m_pRenderTargetView, clr);
     m_pSwapChain->Present(0, 0);
 
+
+    
     return true;
 }

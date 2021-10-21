@@ -12,6 +12,7 @@ Engine::Demo::Demo(HINSTANCE inst, const std::wstring& wndClass, const std::wstr
 
 Engine::Demo::~Demo()
 {
+    UnregisterClass(m_WndClass.c_str(), m_hInst);
 }
 
 void Engine::Demo::InitWindow()
@@ -27,7 +28,7 @@ void Engine::Demo::InitWindow()
     m_Window.hbrBackground = GetSysColorBrush(COLOR_BTNFACE);
     m_Window.lpszClassName = m_WndClass.c_str();
 
-    RECT windowRect = { 0, 0, m_ScreenWidth, m_ScreenHeight };
+    RECT windowRect = { 0, 0, (LONG)m_ScreenWidth, (LONG)m_ScreenHeight };
     AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);  //Calculate client region size
 
     RegisterClassEx(&m_Window);
