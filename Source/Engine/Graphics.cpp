@@ -1,4 +1,5 @@
 #include "Graphics.h"
+
 //DirectX 11 Graphics Backend
 //Ewan Burnett 2021
 
@@ -200,12 +201,13 @@ bool D3D11_Graphics::Init()
     //Compile Shaders 
      
     
-    //Init Test - TODO: Remove this
-    const float clr[4] = { 0.3f, 0.4f, 0.5f, 1.0f };
-    m_pContext->ClearRenderTargetView(m_pRenderTargetView, clr);
-    m_pSwapChain->Present(0, 0);
-
-
-    
     return true;
 }
+
+void D3D11_Graphics::Clear(float r, float g, float b, float a)
+{
+    const float clr[4] = { r, g, b, a };
+    m_pContext->ClearRenderTargetView(m_pRenderTargetView, clr);
+    m_pSwapChain->Present(0, 0);
+}
+

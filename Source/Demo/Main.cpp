@@ -1,5 +1,5 @@
 #include <memory>
-#include "Demo.h"
+#include "..\Engine\Demo.h"
 #include <Windows.h>
 //gameException.h
 
@@ -24,11 +24,6 @@ int WINAPI WinMain(
 #endif
 
     std::unique_ptr<Demo> demo(new Demo(inst, L"RenderingDemo",L"Rendering Demo [Default]", showCode));
-    //Create Demo instance, throw an error if unsuccessful.
-    //try {
     demo->Run();
-    //}
     
-
-
 }

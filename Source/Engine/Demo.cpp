@@ -1,4 +1,5 @@
 #include "Demo.h"
+
 Engine::Demo::Demo(HINSTANCE inst, const std::wstring& wndClass, const std::wstring& wndTitle, int showCommand)
 {
     m_hInst = inst;
@@ -82,6 +83,7 @@ void Engine::Demo::Run()
     ZeroMemory(&message, sizeof(message));
 
     m_Time.Reset();
+    m_RNG.Seed(m_Time.BaseTime());
 
     while (message.message != WM_QUIT) {
         if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE)) {
@@ -89,9 +91,15 @@ void Engine::Demo::Run()
             DispatchMessage(&message);
         }
         else {
+            //Pre-Update
             m_Time.Tick();
+
+            //Update
+            m_Graphics->Clear(0, 0, 0, 1);
             Update();
             Draw();
+
+            //Post-Update
         }
     }
 
@@ -113,4 +121,5 @@ void Engine::Demo::Update()
 
 void Engine::Demo::Draw()
 {
+    
 }

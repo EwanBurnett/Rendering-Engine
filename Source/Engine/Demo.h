@@ -47,6 +47,7 @@ namespace Engine
         UINT m_ScreenHeight;
 
         Time m_Time;
+        RNG m_RNG;
 
         std::unique_ptr<D3D11_Graphics> m_Graphics;
 

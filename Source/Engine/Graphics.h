@@ -32,6 +32,10 @@ public:
     ~D3D11_Graphics();
 
     bool Init();
+    void Clear(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
+
+    ID3D11DeviceContext* Context();
+    IDXGISwapChain* Swapchain();
 
 private:
     //D3D11 Pointers
