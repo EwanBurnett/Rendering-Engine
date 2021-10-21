@@ -38,6 +38,8 @@ void Engine::Demo::InitWindow()
     ShowWindow(m_WindowHandle, m_ShowCmd);
     UpdateWindow(m_WindowHandle);
     
+    m_Graphics = std::make_unique<D3D11_Graphics>(m_WindowHandle, m_ScreenWidth, m_ScreenHeight);
+    
 }
 
 void Engine::Demo::Shutdown()

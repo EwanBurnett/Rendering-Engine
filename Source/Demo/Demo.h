@@ -4,6 +4,7 @@
 #include <string>
 #include "Time.h"
 #include "Random.h"
+#include "Graphics.h"
 
 namespace Engine
 {
@@ -46,6 +47,8 @@ namespace Engine
         UINT m_ScreenHeight;
 
         Time m_Time;
+
+        std::unique_ptr<D3D11_Graphics> m_Graphics;
 
     private:
         Demo(const Demo& rhs);
