@@ -6,3 +6,7 @@ Debug/
 lib/
 
 Build/
+
+.vs/
+
+Source/Demo/Release/

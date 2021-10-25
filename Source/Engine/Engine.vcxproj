@@ -18,6 +18,22 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Backend\Demo.cpp" />
+    <ClCompile Include="Backend\GameObject.cpp" />
+    <ClCompile Include="Backend\Graphics.cpp" />
+    <ClCompile Include="Backend\ObjectPool.cpp" />
+    <ClCompile Include="Components\GameComponent.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Backend\Demo.h" />
+    <ClInclude Include="Backend\GameObject.h" />
+    <ClInclude Include="Backend\Graphics.h" />
+    <ClInclude Include="Backend\ObjectPool.h" />
+    <ClInclude Include="Components\GameComponent.h" />
+    <ClInclude Include="Utils\Random.h" />
+    <ClInclude Include="Utils\Time.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -73,9 +89,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)\Build\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\Build\$(Configuration)\Intermediates\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)\Build\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\Build\$(Configuration)\Intermediates\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -92,6 +111,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)\External\FX11\inc;$(SolutionDir)\External\DXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -99,10 +119,16 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir "$(SolutionDir)\lib\" 
-copy "$(TargetPath)" "$(SolutionDir)\lib\"
+      <Command>mkdir "$(SolutionDir)lib" 
+copy "$(TargetPath)" "$(SolutionDir)lib\"
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>"$(SolutionDir)External\DXTK\MakeSpriteFont.exe" Arial "..\..\Resources\Fonts\Arial_14_Regular.spritefont" /fontsize:14</Command>
+    </PreBuildEvent>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -112,7 +138,7 @@ copy "$(TargetPath)" "$(SolutionDir)\lib\"
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)\External\FX11\inc;$(SolutionDir)\External\DXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -124,10 +150,13 @@ copy "$(TargetPath)" "$(SolutionDir)\lib\"
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir "$(SolutionDir)\lib\" 
-copy "$(TargetPath)" "$(SolutionDir)\lib\"
+      <Command>mkdir "$(SolutionDir)lib" 
+copy "$(TargetPath)" "$(SolutionDir)lib\"
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>"$(SolutionDir)External\DXTK\MakeSpriteFont.exe" Arial "..\..\Resources\Fonts\Arial_14_Regular.spritefont" /fontsize:14</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -163,18 +192,6 @@ copy "$(TargetPath)" "$(SolutionDir)\lib\"
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="Demo.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="Graphics.h" />
-    <ClInclude Include="Random.h" />
-    <ClInclude Include="Time.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Demo.cpp" />
-    <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="Graphics.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
