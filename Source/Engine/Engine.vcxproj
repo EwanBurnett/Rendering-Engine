@@ -32,6 +32,7 @@
     <ClInclude Include="Backend\ObjectPool.h" />
     <ClInclude Include="Components\GameComponent.h" />
     <ClInclude Include="Utils\Random.h" />
+    <ClInclude Include="Utils\RTTI.h" />
     <ClInclude Include="Utils\Time.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -112,6 +113,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)\External\FX11\inc;$(SolutionDir)\External\DXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -141,6 +143,7 @@ copy "$(TargetPath)" "$(SolutionDir)lib\"
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)\External\FX11\inc;$(SolutionDir)\External\DXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>

@@ -3,8 +3,13 @@
 //DirectX 11 Graphics Backend
 //Ewan Burnett 2021
 
+D3D11_Graphics* D3D11_Graphics::m_Instance = nullptr;
+
 D3D11_Graphics::D3D11_Graphics(HWND &hWnd, UINT width, UINT height)
 {
+    assert(m_Instance == nullptr);
+    m_Instance = this;
+
     m_hWnd = hWnd;
     m_ClientWidth = width;
     m_ClientHeight = height;
@@ -205,17 +210,18 @@ bool D3D11_Graphics::Init()
 
     //Bind our views to the Output Merger
     m_pContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+    
 
     //Setting Viewport
-    D3D11_VIEWPORT vp;
-    vp.TopLeftX = 0.0f;
-    vp.TopLeftY = 0.0f;
-    vp.Width = static_cast<float>(m_ClientWidth);
-    vp.Height = static_cast<float>(m_ClientHeight);
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
+    
+    m_ViewPort.TopLeftX = 0.0f;
+    m_ViewPort.TopLeftY = 0.0f;
+    m_ViewPort.Width = static_cast<float>(m_ClientWidth);
+    m_ViewPort.Height = static_cast<float>(m_ClientHeight);
+    m_ViewPort.MinDepth = 0.0f;
+    m_ViewPort.MaxDepth = 1.0f;
 
-
+    m_pContext->RSSetViewports(1, &m_ViewPort);
     //Compile Shaders 
     
     return true;
@@ -225,7 +231,8 @@ void D3D11_Graphics::Clear(float r, float g, float b, float a)
 {
     const float clr[4] = { r, g, b, a };
     m_pContext->ClearRenderTargetView(m_pRenderTargetView, clr);
-    m_pSwapChain->Present(0, 0);
+    m_pContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    
 }
 
 ID3D11DeviceContext* D3D11_Graphics::Context()
@@ -236,5 +243,10 @@ ID3D11DeviceContext* D3D11_Graphics::Context()
 ID3D11Device* D3D11_Graphics::Device()
 {
     return m_pDevice;
+}
+
+IDXGISwapChain* D3D11_Graphics::Swapchain()
+{
+    return m_pSwapChain.Get();
 }
 

@@ -27,7 +27,10 @@ namespace Engine
         virtual void Exit();
         virtual void Init();
         virtual void Update(float dt);
-        virtual void Draw(float dt);
+
+        void PreInit();
+        void DoFrame(float dt);
+        void Draw(float dt);
 
     protected:
         virtual void InitWindow();
@@ -51,8 +54,8 @@ namespace Engine
         float m_FixedTimestep;
         RNG m_RNG;
 
-        Engine::ObjectPool m_ObjectPool;
-
+        //Engine::ObjectPool m_ObjectPool;
+        std::vector<Engine::GameComponent*> m_Components;  //TODO: Replace with Object Pooling
         std::unique_ptr<D3D11_Graphics> m_Graphics;
 
     private:

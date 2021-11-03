@@ -7,6 +7,8 @@ Engine::Demo::Demo(HINSTANCE inst, const std::wstring& wndClass, const std::wstr
     //Set up the singleton for this demo
     assert(m_Instance == nullptr);
     m_Instance = this;
+
+    
     
 
     m_hInst = inst;
@@ -53,6 +55,7 @@ void Engine::Demo::InitWindow()
 
 void Engine::Demo::Shutdown()
 {
+    Exit();
 }
 
 //Demo& Engine::Demo::operator=(const Demo& rhs)
@@ -94,11 +97,15 @@ void Engine::Demo::Run()
 
     m_RNG.Seed(m_Time.BaseTime());
 
-    m_ObjectPool.Alloc(5000);
+    //m_ObjectPool.Alloc(5000);
 
     //Fixed Timestep logic
     m_FixedTimestep = 1.0f / 60.0f;
     static float accumulator = 0;
+
+    //Initialize the Demo
+    Init();
+    PreInit();
 
     while (message.message != WM_QUIT) {
         if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE)) {
@@ -113,6 +120,7 @@ void Engine::Demo::Run()
             m_Graphics->Clear(0, 0, 0, 1);
             
             //Update
+            DoFrame(m_Time.DeltaTime());
             Update(m_Time.DeltaTime());
 
             while (accumulator >= m_FixedTimestep) {
@@ -122,6 +130,7 @@ void Engine::Demo::Run()
 
             Draw(m_Time.DeltaTime());
 
+            m_Graphics->Swapchain()->Present(0, 0);
             //Post-Update
         }
     }
@@ -135,21 +144,30 @@ void Engine::Demo::Exit()
 
 void Engine::Demo::Init()
 {
-    for (auto& obj : m_ObjectPool.Objects()) {
-        obj.second->Init();
-    }
 }
 
 void Engine::Demo::Update(float dt)
 {
-    for (auto& obj : m_ObjectPool.Objects()) {
-        obj.second->Update(dt);
+    
+}
+
+void Engine::Demo::PreInit()
+{
+    for (auto& obj : m_Components) {
+        obj->Init();
+    }
+}
+
+void Engine::Demo::DoFrame(float dt)
+{
+    for (auto& obj : m_Components) {
+        obj->Update(dt);
     }
 }
 
 void Engine::Demo::Draw(float dt)
 {
-    for (auto& obj : m_ObjectPool.Objects()) {
-        obj.second->Draw(dt);
+    for (auto& obj : m_Components) {
+        obj->Draw(dt);
     }
 }

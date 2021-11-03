@@ -1,12 +1,11 @@
 #pragma once
 #include "GameObject.h"
-#include <unordered_map>
+#include <map>
 #include <memory>
 #include <assert.h>
 
 namespace Engine {
-	//TODO: Implement this
-	typedef unsigned int ID;
+	typedef std::map<Engine::GameObject::ObjectID, Engine::GameObject::StrongGameobjectPtr*> Pool;
 
 	class ObjectPool {
 	public:
@@ -16,16 +15,16 @@ namespace Engine {
 		void Alloc(int size);
 		void Dealloc();
 
-		std::unordered_map<Engine::ID, Engine::GameObject*> Objects();
+		Pool Objects();
 
 		GameObject& Create();
-		void Create(ID id);
+		Engine::GameObject::StrongGameobjectPtr Create(std::string type);
 
 		void Destroy(GameObject* object);
-		void Destroy(ID id);
+		void Destroy(std::string id);
 
 	private:
 		static ObjectPool* m_Instance;
-		std::unordered_map<Engine::ID, Engine::GameObject*> m_Objects;
+		Pool m_Objects;
 	};
 }

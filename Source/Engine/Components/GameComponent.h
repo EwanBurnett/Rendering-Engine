@@ -3,6 +3,8 @@
 namespace Engine {
     class GameComponent {
     public:
+        typedef unsigned long ComponentID;
+
         GameComponent();
         virtual ~GameComponent();
 

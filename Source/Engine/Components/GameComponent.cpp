@@ -1,4 +1,5 @@
 #include "GameComponent.h"
+#include <Windows.h>
 
 Engine::GameComponent::GameComponent() : m_bEnabled(true)
 {
@@ -20,12 +21,15 @@ void Engine::GameComponent::SetEnabled(bool state)
 
 void Engine::GameComponent::Init()
 {
+    OutputDebugString(L"Init Called");
 }
 
 void Engine::GameComponent::Update(float dt)
 {
+    OutputDebugString(L"Update Called");
 }
 
 void Engine::GameComponent::Draw(float dt)
 {
+    OutputDebugString(L"Draw Called");
 }

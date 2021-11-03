@@ -49,6 +49,7 @@ private:
     
     ID3D11RenderTargetView* m_pRenderTargetView;
     ID3D11DepthStencilView* m_pDepthStencilView;
+    D3D11_VIEWPORT m_ViewPort;
     D3D_FEATURE_LEVEL m_FeatureLevel;
 
     //Window Parameters
@@ -71,4 +72,6 @@ private:
     bool m_bEnable4xMSAA = true;
     bool m_bEnableDepthStencil = true;
 
+    //Singleton Instance
+    static D3D11_Graphics* m_Instance;
 };

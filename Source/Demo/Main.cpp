@@ -1,7 +1,6 @@
 #include <memory>
-#include "..\Engine\Backend\Demo.h"
 #include <Windows.h>
-//gameException.h
+#include "Game.h"
 
 #if defined(DEBUG) | defined(_DEBUG)
 #define _CRTDBG_MAP_ALLOC
@@ -9,7 +8,6 @@
 #include <stdlib.h>
 #endif
 
-using namespace Engine; 
 
 int WINAPI WinMain(
     HINSTANCE inst,
@@ -23,7 +21,7 @@ int WINAPI WinMain(
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-    std::unique_ptr<Demo> demo(new Demo(inst, L"RenderingDemo",L"Rendering Demo [Default]", showCode));
-    demo->Run();
+    Game* game = new Game(inst, L"RenderingDemo",L"Rendering Demo [Default]", showCode);
+    game->Run();
     
 }
