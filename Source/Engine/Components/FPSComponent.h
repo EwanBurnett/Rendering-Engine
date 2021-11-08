@@ -1,7 +1,11 @@
+//Ewan Burnett 2021
+//FPS Component - A Debug Component which displays the
+//Framerate, Frame time and Delta Time 
+
 #pragma once
-#include <Components/GameComponent.h>
-#include <Utils/Time.h>
-#include <Backend/Graphics.h>
+#include "../Components/GameComponent.h"
+#include "../Utils/Time.h"
+#include "../Backend/Graphics.h"
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
 #include <sstream>
@@ -82,7 +86,6 @@ inline void Engine::FPSComponent::Draw(float dt)
     fpsLabel << L"FrameRate: " << m_FrameRate << L" Current Frame Time: " << m_Time->DeltaTime() <<  L" Total Elapsed Time: " << m_Time->TotalTime() << std::endl;
     
     m_SpriteFont->DrawString(m_SpriteBatch, fpsLabel.str().c_str(), m_TextPos, DirectX::Colors::AliceBlue);
-
 
     m_SpriteBatch->End();
 

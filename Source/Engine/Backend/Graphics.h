@@ -1,6 +1,8 @@
-#pragma once
-//DirectX11 Graphics Backend
+//DirectX 11 Graphics Backend
 //Ewan Burnett 2021
+//A Singleton class, which contains Initialization methods for DX11, 
+//as well as accessor methods for the D3D11 Device and Context interfaces.
+#pragma once
 
 #include <windows.h>
 #include <exception>
@@ -34,8 +36,11 @@ public:
     bool Init();
     void Clear(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
 
+    //Returns the ID3D11 Device Context
     ID3D11DeviceContext* Context();
+    //Returns the ID3D11 Device
     ID3D11Device* Device();
+    //Returns the IDXGI SwapChain
     IDXGISwapChain* Swapchain();
 
 private:

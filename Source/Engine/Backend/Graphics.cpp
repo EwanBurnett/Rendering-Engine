@@ -1,7 +1,7 @@
-#include "Graphics.h"
-
-//DirectX 11 Graphics Backend
 //Ewan Burnett 2021
+//DirectX 11 Graphics Backend
+
+#include "Graphics.h"
 
 D3D11_Graphics* D3D11_Graphics::m_Instance = nullptr;
 
@@ -203,8 +203,7 @@ bool D3D11_Graphics::Init()
         dsvd.Flags = 0;
 
         m_pDevice->CreateDepthStencilView(depthStencilBuffer, &dsvd, &m_pDepthStencilView);
-        
-        
+                
         depthStencilBuffer->Release();
     }
 
@@ -212,7 +211,7 @@ bool D3D11_Graphics::Init()
     m_pContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
     
 
-    //Setting Viewport
+    //Setting the Viewport
     
     m_ViewPort.TopLeftX = 0.0f;
     m_ViewPort.TopLeftY = 0.0f;
@@ -231,8 +230,7 @@ void D3D11_Graphics::Clear(float r, float g, float b, float a)
 {
     const float clr[4] = { r, g, b, a };
     m_pContext->ClearRenderTargetView(m_pRenderTargetView, clr);
-    m_pContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-    
+    m_pContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);    
 }
 
 ID3D11DeviceContext* D3D11_Graphics::Context()

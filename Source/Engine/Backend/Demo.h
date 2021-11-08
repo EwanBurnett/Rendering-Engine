@@ -6,6 +6,7 @@
 #include "..\Utils\Random.h"
 #include "..\Backend\Graphics.h"
 #include "..\Backend\ObjectPool.h"
+#include "..\Components\Keyboard.h"
 
 namespace Engine
 {
@@ -27,6 +28,7 @@ namespace Engine
         virtual void Exit();
         virtual void Init();
         virtual void Update(float dt);
+        virtual void FixedUpdate(float dt);
 
         void PreInit();
         void DoFrame(float dt);
@@ -53,6 +55,8 @@ namespace Engine
         Time m_Time;
         float m_FixedTimestep;
         RNG m_RNG;
+
+        Keyboard m_Keyboard;
 
         //Engine::ObjectPool m_ObjectPool;
         std::vector<Engine::GameComponent*> m_Components;  //TODO: Replace with Object Pooling

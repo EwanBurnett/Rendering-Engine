@@ -8,9 +8,6 @@ Engine::Demo::Demo(HINSTANCE inst, const std::wstring& wndClass, const std::wstr
     assert(m_Instance == nullptr);
     m_Instance = this;
 
-    
-    
-
     m_hInst = inst;
     m_WndClass = wndClass;
     m_WndTitle = wndTitle;
@@ -80,6 +77,18 @@ LRESULT __stdcall Engine::Demo::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
     case WM_DESTROY:
         PostQuitMessage(0xdead);
         return 0;
+
+    //Process any keyboard inputs
+    case WM_KEYDOWN:
+        //m_Keyboard.OnKeyPressed(wParam);
+        break;
+
+    case WM_KEYUP:
+        //m_Keyboard.OnKeyReleased(wParam);
+        break;
+
+    default:
+        break;
     }
 
     return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -125,6 +134,7 @@ void Engine::Demo::Run()
 
             while (accumulator >= m_FixedTimestep) {
                 //Fixed Update
+                FixedUpdate(m_FixedTimestep);
                 accumulator -= m_FixedTimestep;
             }
 
@@ -148,7 +158,10 @@ void Engine::Demo::Init()
 
 void Engine::Demo::Update(float dt)
 {
-    
+}
+
+void Engine::Demo::FixedUpdate(float dt)
+{
 }
 
 void Engine::Demo::PreInit()

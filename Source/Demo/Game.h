@@ -11,8 +11,9 @@ public:
 
     //Overrides for invoked methods
     void Update(float dt) override;
-    
+    void FixedUpdate(float dt) override;
+
     void Init() override;
     void Exit() override;
-
+    
 };
