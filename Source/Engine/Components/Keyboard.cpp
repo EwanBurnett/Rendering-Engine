@@ -32,7 +32,7 @@ void Engine::Keyboard::OnKeyReleased(int key)
 bool Engine::Keyboard::KeyDown(int key) {
 
     if (key > MAX_KEY_CODE) {
-        return;
+        return false;
     }
 
     return m_ThisInput[key];
