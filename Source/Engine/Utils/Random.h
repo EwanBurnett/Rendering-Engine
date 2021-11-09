@@ -24,7 +24,6 @@ inline void RNG::Seed(float val)
     
     if (val != 0) {
         //Seed the RNG to the input value. 
-        mt.seed(val);
         mt.seed(static_cast<unsigned int>(val));
     }
     //if value is null, seed to current time.

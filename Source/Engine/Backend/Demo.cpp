@@ -1,6 +1,7 @@
 #include "Demo.h"
 
 Engine::Demo* Engine::Demo::m_Instance = nullptr;
+Engine::Keyboard* Engine::Demo::m_Keyboard = nullptr;
 
 Engine::Demo::Demo(HINSTANCE inst, const std::wstring& wndClass, const std::wstring& wndTitle, int showCommand)
 {
@@ -16,12 +17,16 @@ Engine::Demo::Demo(HINSTANCE inst, const std::wstring& wndClass, const std::wstr
     m_ScreenWidth = 1600;
     m_ScreenHeight = 900;
 
-    //m_Keyboard = new Keyboard();
+    m_Keyboard = new Keyboard();
 }
 
 Engine::Demo::~Demo()
 {
     UnregisterClass(m_WndClass.c_str(), m_hInst);
+}
+
+void Engine::Demo::OnMouseMoved(int posX, int posY)
+{
 }
 
 void Engine::Demo::InitWindow()
@@ -72,6 +77,30 @@ POINT Engine::Demo::CenterWindow(int windowWidth, int windowHeight)
     center.y = (screenHeight - windowHeight) / 2;
     return center;
 }
+//
+//LRESULT Engine::Demo::WndProcSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+//{
+//    if (msg == WM_NCCREATE) {
+//        //Store a handle to the application using the Create parameter, to access specific methods
+//        const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
+//        Demo* const pInst = static_cast<Demo*>(pCreate->lpCreateParams);
+//        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pInst));
+//
+//        //Set the new Window Procedure 
+//        SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Demo::WndProcProcess));
+//
+//        return pInst->WndProc(hWnd, msg, wParam, lParam);
+//    }
+//
+//    return DefWindowProc(hWnd, msg, wParam, lParam);
+//}
+//
+//LRESULT Engine::Demo::WndProcProcess(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+//{
+//    Demo* const pInst = reinterpret_cast<Demo*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+//
+//    return pInst->WndProc(hWnd, msg, wParam, lParam);
+//}
 
 LRESULT __stdcall Engine::Demo::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -82,13 +111,17 @@ LRESULT __stdcall Engine::Demo::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 
     //Process any keyboard inputs
     case WM_KEYDOWN:
-        //m_Keyboard->OnKeyPressed(wParam);
+        m_Keyboard->OnKeyPressed(wParam);
+        //OnKeyPressed(wParam);
         break;
 
     case WM_KEYUP:
-        //m_Keyboard->OnKeyReleased(wParam);
+        m_Keyboard->OnKeyReleased(wParam);
+        //OnKeyReleased(wParam);
         break;
 
+    case WM_MOUSEMOVE:
+        //OnMouseMoved(LOWORD(lParam), HIWORD(lParam));
     default:
         break;
     }
@@ -192,4 +225,14 @@ void Engine::Demo::Draw(float dt)
             obj->Draw(dt);
         }
     }
+}
+
+void Engine::Demo::OnKeyPressed(int code)
+{
+    //m_Keyboard->OnKeyPressed(code);
+}
+
+void Engine::Demo::OnKeyReleased(int code)
+{
+    //m_Keyboard->OnKeyReleased(code);
 }

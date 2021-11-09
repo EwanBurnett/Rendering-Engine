@@ -14,6 +14,7 @@ void Engine::Keyboard::OnKeyPressed(int key)
     if (key > MAX_KEY_CODE) {
         return;
     }
+    //TODO: Fix F10 key input
 
     m_LastInput = m_ThisInput;
     m_ThisInput.set(key, true);
@@ -34,6 +35,14 @@ bool Engine::Keyboard::KeyDown(int key) {
     if (key > MAX_KEY_CODE) {
         return false;
     }
+    //If the key wasn't pressed during the last frame, but is this frame
+    if (m_LastInput.test(key) == false && m_ThisInput.test(key) == true) {
+        return true;
+    }
+    return false;
+}
 
-    return m_ThisInput[key];
+std::bitset<MAX_KEY_CODE> Engine::Keyboard::GetKeyboardState()
+{
+    return m_ThisInput;
 }

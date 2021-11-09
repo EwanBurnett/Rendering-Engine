@@ -35,6 +35,13 @@ namespace Engine
         void Draw(float dt);
 
     protected:
+        void OnKeyPressed(int code);
+        void OnKeyReleased(int code);
+
+        void OnMouseButtonPressed(int code);
+        void OnMouseButtonReleased(int code);
+        void OnMouseMoved(int posX, int posY);
+
         virtual void InitWindow();
         virtual void Shutdown();
 
@@ -56,7 +63,7 @@ namespace Engine
         float m_FixedTimestep;
         RNG m_RNG;
 
-        //Engine::Keyboard m_Keyboard;
+        static Keyboard* m_Keyboard;
 
         //Engine::ObjectPool m_ObjectPool;
         std::vector<Engine::GameComponent*> m_Components;  //TODO: Replace with Object Pooling
@@ -70,7 +77,9 @@ namespace Engine
         static Demo* m_Instance;
 
         POINT CenterWindow(int windowWidth, int windowHeight);
-        static LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+      /*  static LRESULT CALLBACK WndProcSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+        static LRESULT CALLBACK WndProcProcess(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);*/
+        static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
     };
 

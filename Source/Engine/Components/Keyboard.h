@@ -102,6 +102,7 @@ namespace Engine {
         bool KeyHeld(int key);
         bool KeyReleased(int key);
 
+        std::bitset<MAX_KEY_CODE> GetKeyboardState();
     private:
         //Each byte corresponds to an ASCII value. ( 0 - 7F )
         

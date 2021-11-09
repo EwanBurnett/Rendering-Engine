@@ -3,6 +3,7 @@
 #include <Components/TextComponent.h>
 
 Engine::TextComponent* textComponent;
+Engine::TextComponent* keyboardView;
 
 //Init is called when the application is started.
 void Game::Init()
@@ -16,6 +17,10 @@ void Game::Init()
     fpsComponent->TextPosition() = DirectX::XMFLOAT2(10, 100);
     fpsComponent->SetColor(0, 1, 0.25);
     m_Components.push_back(fpsComponent);
+
+    keyboardView = new Engine::TextComponent(m_Graphics.get());
+    keyboardView->SetPosition(500, 500);
+    keyboardView->SetText(m_Keyboard->GetKeyboardState().to_string());
 }
 
 //Update is called once per frame. 
