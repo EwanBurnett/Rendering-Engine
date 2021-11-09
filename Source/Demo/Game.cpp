@@ -38,6 +38,13 @@ void Game::Update(float dt)
     std::string kbd = m_Keyboard->GetKeyboardState().to_string();
     out << "Keyboard State: " << kbd.substr(0, 32) << std::endl << kbd.substr(32, 64) << std::endl << kbd.substr(64, 96) << std::endl << kbd.substr(96, 128) << std::endl << kbd.substr(128, 160) << std::endl;
     keyboardView->SetText(out.str());
+
+    if (m_Keyboard->KeyDown(KB_KEY_F)) {
+        m_FramerateLimit = 60;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_G)) {
+        m_FramerateLimit = 0;
+    }
 }
 
 //FixedUpdate is called at a constant rate.

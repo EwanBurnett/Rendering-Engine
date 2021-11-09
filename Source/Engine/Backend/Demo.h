@@ -6,7 +6,7 @@
 #include "..\Utils\Random.h"
 #include "..\Backend\Graphics.h"
 #include "..\Backend\ObjectPool.h"
-#include "..\Components\Keyboard.h"
+#include "..\Components\Input.h"
 
 namespace Engine
 {
@@ -61,6 +61,7 @@ namespace Engine
 
         Time m_Time;
         float m_FixedTimestep;
+        int m_FramerateLimit;
         RNG m_RNG;
 
         static Keyboard* m_Keyboard;

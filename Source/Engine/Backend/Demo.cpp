@@ -139,6 +139,7 @@ void Engine::Demo::Run()
     m_Time.Reset();
     m_Time.SetTimeScale(1.0f);
 
+    m_FramerateLimit = 0;
     m_RNG.Seed(m_Time.BaseTime());
 
     //m_ObjectPool.Alloc(5000);
@@ -146,7 +147,8 @@ void Engine::Demo::Run()
     //Fixed Timestep logic
     m_FixedTimestep = 1.0f / 60.0f;
     static float accumulator = 0;
-
+    
+    int FPS;
     //Initialize the Demo
     Init();
     PreInit();
@@ -160,12 +162,27 @@ void Engine::Demo::Run()
             //Pre-Update
             m_Time.Tick();
             accumulator += m_Time.DeltaTime();
+            FPS = 1.0f / m_Time.DeltaTime();
+            float fixedFrameTime = 1.0f / m_FramerateLimit;
 
             m_Graphics->Clear(0, 0, 0, 1);
             
-            //Update
-            DoFrame(m_Time.DeltaTime());
-            Update(m_Time.DeltaTime());
+            
+            if (m_FramerateLimit < FPS && m_FramerateLimit > 0) {
+                float sleepTime = 1000 * (fixedFrameTime - m_Time.DeltaTime());
+
+                //Update (Framerate Limited)
+                DoFrame(fixedFrameTime);
+                Update(fixedFrameTime);
+
+                Sleep(sleepTime);
+            }
+            else {
+                //Update
+                DoFrame(m_Time.DeltaTime());
+                Update(m_Time.DeltaTime());
+            }
+            
 
             while (accumulator >= m_FixedTimestep) {
                 //Fixed Update
