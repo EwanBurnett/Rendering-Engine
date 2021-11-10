@@ -7,6 +7,7 @@
 #include "..\Backend\Graphics.h"
 #include "..\Backend\ObjectPool.h"
 #include "..\Components\Input.h"
+#include "..\resource.h"
 
 namespace Engine
 {

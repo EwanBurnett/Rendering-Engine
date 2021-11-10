@@ -31,13 +31,15 @@ void Engine::Demo::OnMouseMoved(int posX, int posY)
 
 void Engine::Demo::InitWindow()
 {
+    HICON icon = static_cast<HICON>(LoadImage(NULL, MAKEINTRESOURCE(IDI_HAND), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_DEFAULTSIZE | LR_SHARED));
+
     ZeroMemory(&m_Window, sizeof(m_Window));
     m_Window.cbSize = sizeof(WNDCLASSEX);
     m_Window.style = CS_CLASSDC;
     m_Window.lpfnWndProc = WndProc;
     m_Window.hInstance = m_hInst;
-    m_Window.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-    m_Window.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+    m_Window.hIcon = icon;
+    m_Window.hIconSm = icon;
     m_Window.hCursor = LoadCursor(nullptr, IDC_ARROW);
     m_Window.hbrBackground = GetSysColorBrush(COLOR_BTNFACE);
     m_Window.lpszClassName = m_WndClass.c_str();
