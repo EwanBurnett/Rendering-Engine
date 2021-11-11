@@ -43,7 +43,7 @@ D3D11_Graphics::~D3D11_Graphics()
     if (d3dDebug != nullptr) {
         d3dDebug->Release();
     }
-
+   
 #endif
 
     if (m_pDevice != nullptr) {

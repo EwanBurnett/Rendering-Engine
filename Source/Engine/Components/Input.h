@@ -105,6 +105,7 @@ namespace Engine {
         void SetHoldDelay(float delay);
 
         std::bitset<MAX_KEY_CODE> GetKeyboardState();
+        std::bitset<MAX_KEY_CODE> GetLastKeyboardState();
     private:
         float m_KeyHoldDelay;
         float m_DeltaTime;
@@ -127,6 +128,8 @@ namespace Engine {
 
         void OnMouseMoved(float x, float y);
     private:
+        bool m_bHasFocus;
+
         float m_PosX;
         float m_PosY;
 

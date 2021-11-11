@@ -7,6 +7,7 @@
 #include "..\Backend\Graphics.h"
 #include "..\Backend\ObjectPool.h"
 #include "..\Components\Input.h"
+#include "..\Components\Camera.h"
 #include "..\resource.h"
 
 namespace Engine
@@ -64,9 +65,10 @@ namespace Engine
         float m_FixedTimestep;
         int m_FramerateLimit;
         RNG m_RNG;
+        Camera* m_Camera;
 
         static Keyboard* m_Keyboard;
-
+        
         //Engine::ObjectPool m_ObjectPool;
         std::vector<Engine::GameComponent*> m_Components;  //TODO: Replace with Object Pooling
         std::unique_ptr<D3D11_Graphics> m_Graphics;

@@ -18,12 +18,16 @@ Engine::Demo::Demo(HINSTANCE inst, const std::wstring& wndClass, const std::wstr
     m_ScreenHeight = 900;
 
     m_Keyboard = new Keyboard();
+    m_Camera = new Camera();
+    m_Components.push_back(m_Camera);    
+
 }
 
 Engine::Demo::~Demo()
 {
     UnregisterClass(m_WndClass.c_str(), m_hInst);
     delete(m_Keyboard);
+    delete(m_Camera);
 }
 
 void Engine::Demo::OnMouseMoved(int posX, int posY)

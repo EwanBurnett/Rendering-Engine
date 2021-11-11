@@ -93,3 +93,8 @@ std::bitset<MAX_KEY_CODE> Engine::Keyboard::GetKeyboardState()
 {
     return m_ThisInput;
 }
+
+std::bitset<MAX_KEY_CODE> Engine::Keyboard::GetLastKeyboardState()
+{
+    return m_LastInput;
+}
