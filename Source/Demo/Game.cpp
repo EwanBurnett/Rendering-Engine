@@ -5,6 +5,8 @@
 
 Engine::TextComponent* textComponent;
 Engine::TextComponent* keyboardView;
+Engine::FPSComponent* fpsComponent;
+Engine::TextComponent* warning;
 int frameLimitSwitch = 0;
 
 //Init is called when the application is started.
@@ -15,19 +17,19 @@ void Game::Init()
     textComponent->SetText("Default Rendering Demo\nEwan Burnett [2021]\nA simple demo, demonstrating rendered text.\nFramerate Controls:\n    F1 - uncapped\n    F2 - 15 FPS\n    F3 - 30 FPS\n    F4 - 60 FPS");
     m_Components.push_back(textComponent);
 
-    Engine::FPSComponent* fpsComponent = new Engine::FPSComponent(&m_Time, m_Graphics.get());
+    fpsComponent = new Engine::FPSComponent(&m_Time, m_Graphics.get());
     fpsComponent->TextPosition() = DirectX::XMFLOAT2(400, 10);
-    fpsComponent->SetColor(0, 1, 0.25);
+    fpsComponent->SetColor(0.0f, 1.0f, 0.25f);
     m_Components.push_back(fpsComponent);
 
     keyboardView = new Engine::TextComponent(m_Graphics.get());
     keyboardView->SetPosition(10, 660);
-    keyboardView->SetColor(0.05, 0.2, 1.0, 1.0);
+    keyboardView->SetColor(0.05f, 0.2f, 1.0f, 1.0f);
     m_Components.push_back(keyboardView);
 
-    Engine::TextComponent* warning = new  Engine::TextComponent(m_Graphics.get());
-    warning->SetText("DON'T EVEN THINK ABOUT MOVING ONTO\nRENDERING BEFORE YOU FULLY IMPLEMENT AND TEST\nALL THIS BACKEND STUFF!!!\n+ Keyboard Input\n- Mouse Input\n- Building Fonts\n- Object Pooling\n+ Camera Matrices\n+ Framerate Limiting\n- Game Objects\n- Byte Alignment\n- OPTIMISATIONS\n- Warnings\n- Memory Leaks\n- COM Pointers\n- Sprite Component\n- COMMENTING\n- ARCHITECTURAL DESIGN DOCUMENT!!!!!!!!!\n- ...and tidying up :D\nHave Fun <3");
-    warning->SetColor(1, 0, 0.05, 1.0f);
+    warning = new  Engine::TextComponent(m_Graphics.get());
+    warning->SetText("DON'T EVEN THINK ABOUT MOVING ONTO\nRENDERING BEFORE YOU FULLY IMPLEMENT AND TEST\nALL THIS BACKEND STUFF!!!\n+ Keyboard Input\n- Mouse Input\n- Building Fonts\n- Object Pooling\n+ Camera Matrices\n+ Framerate Limiting\n- Game Objects\n- Byte Alignment\n- OPTIMISATIONS\n- Warnings\n- Memory Leaks\n- COM Pointers\n- Sprite Component\n- COMMENTING\n- ARCHITECTURAL DESIGN DOCUMENT!!!!!!!!!\n+ Icons\n- ...and tidying up :D\nHave Fun <3");
+    warning->SetColor(1.0f, 0.0f, 0.05f, 1.0f);
     warning->SetPosition(800, 10);
     m_Components.push_back(warning);
 }
@@ -71,4 +73,8 @@ void Game::FixedUpdate(float dt)
 //Exit is called before the application shuts down.
 void Game::Exit()
 {
+    delete(textComponent);
+    delete(fpsComponent);
+    delete(keyboardView);
+    delete(warning);
 }

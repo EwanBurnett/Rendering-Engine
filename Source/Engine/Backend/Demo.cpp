@@ -23,6 +23,7 @@ Engine::Demo::Demo(HINSTANCE inst, const std::wstring& wndClass, const std::wstr
 Engine::Demo::~Demo()
 {
     UnregisterClass(m_WndClass.c_str(), m_hInst);
+    delete(m_Keyboard);
 }
 
 void Engine::Demo::OnMouseMoved(int posX, int posY)
