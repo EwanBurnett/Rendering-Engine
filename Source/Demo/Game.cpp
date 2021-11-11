@@ -26,7 +26,7 @@ void Game::Init()
     m_Components.push_back(keyboardView);
 
     Engine::TextComponent* warning = new  Engine::TextComponent(m_Graphics.get());
-    warning->SetText("DON'T EVEN THINK ABOUT MOVING ONTO\nRENDERING BEFORE YOU FULLY IMPLEMENT AND TEST\nALL THIS BACKEND STUFF!!!\n- Keyboard Input\n- Mouse Input\n- Building Fonts\n- Object Pooling\n- Camera Matrices\n- Framerate Limiting\n- Game Objects\n- Byte Alignment\n- OPTIMISATIONS\n- Warnings\n- Memory Leaks\n- COM Pointers\n- Sprite Component\n- COMMENTING\n- ARCHITECTURAL DESIGN DOCUMENT!!!!!!!!!\n- ...and tidying up :D\nHave Fun <3");
+    warning->SetText("DON'T EVEN THINK ABOUT MOVING ONTO\nRENDERING BEFORE YOU FULLY IMPLEMENT AND TEST\nALL THIS BACKEND STUFF!!!\n+ Keyboard Input\n- Mouse Input\n- Building Fonts\n- Object Pooling\n+ Camera Matrices\n+ Framerate Limiting\n- Game Objects\n- Byte Alignment\n- OPTIMISATIONS\n- Warnings\n- Memory Leaks\n- COM Pointers\n- Sprite Component\n- COMMENTING\n- ARCHITECTURAL DESIGN DOCUMENT!!!!!!!!!\n- ...and tidying up :D\nHave Fun <3");
     warning->SetColor(1, 0, 0.05, 1.0f);
     warning->SetPosition(800, 10);
     m_Components.push_back(warning);
@@ -39,7 +39,12 @@ void Game::Update(float dt)
     std::stringstream out;
     std::string kbd = m_Keyboard->GetKeyboardState().to_string();
     std::reverse(kbd.begin(), kbd.end());
-    out << "Keyboard State [Starting from bit 0]: \n" << kbd.substr(0, 64) << std::endl << kbd.substr(65, 128) << std::endl << kbd.substr(129, 196) << std::endl;
+    kbd.insert(32, "\n");
+    kbd.insert(64, "\n");
+    kbd.insert(96, "\n");
+    kbd.insert(128, "\n");
+    //out << "Keyboard State [Starting from bit 0]: \n" << kbd.substr(0, 64) << std::endl << kbd.substr(65, 128) << std::endl << kbd.substr(129, 196) << std::endl;
+    out << "Keyboard State [Starting from bit 0]: \n" << kbd << std::endl;
     keyboardView->SetText(out.str());
 
     if (m_Keyboard->KeyDown(KB_FNC_F1)) {

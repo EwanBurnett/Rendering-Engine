@@ -47,7 +47,10 @@
     <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="AppIcon.ico" />
+    <Image Include="..\..\Resources\Textures\AppIcon.ico">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </Image>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -137,6 +140,8 @@
     <PostBuildEvent>
       <Command>mkdir "$(SolutionDir)lib" 
 copy "$(TargetPath)" "$(SolutionDir)lib\"
+copy "$(TargetDir)Engine.pdb" "$(SolutionDir)lib\"
+copy "$(TargetDir)Intermediates\Engine.res" "$(SolutionDir)lib\"
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -169,6 +174,8 @@ copy "$(TargetPath)" "$(SolutionDir)lib\"
     <PostBuildEvent>
       <Command>mkdir "$(SolutionDir)lib" 
 copy "$(TargetPath)" "$(SolutionDir)lib\"
+copy "$(TargetDir)Engine.pdb" "$(SolutionDir)lib\"
+copy "$(TargetDir)Intermediates\Engine.res" "$(SolutionDir)lib\"
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>
