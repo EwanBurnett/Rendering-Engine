@@ -37,6 +37,10 @@ namespace Engine {
         XMVECTORF32 m_SpriteColor;
         XMFLOAT2 m_SpritePos;
         RECT m_SpriteRect;
+        XMFLOAT2 m_SpriteOrigin;
+        float m_SpriteScale;
+        SpriteEffects m_SpriteEffect;
+        float m_SpriteDepth;
 
     private:
         SpriteBatch* m_SpriteBatch;
@@ -50,9 +54,13 @@ inline Engine::SpriteComponent::SpriteComponent(D3D11_Graphics* gfx) :
     m_SpriteBatch(nullptr)
 {
     
-    m_SpriteColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+    m_SpriteColor = { 1.0f, 1.0f, 1.0f, 0.2f };
+    m_SpriteEffect = SpriteEffects_FlipHorizontally;
+    m_SpriteDepth = 0.0f;
+    m_SpriteOrigin = XMFLOAT2(0, 0);
+    m_SpriteScale = 1.0f;
 
-    m_SpriteRect = { 0, 0, 1600, 900 };
+    m_SpriteRect = { 0, 0, 512, 256 };
     m_Graphics = gfx;
     SetPosition(0, 0);
     SetSprite(L"..\\..\\Resources\\Textures\\DefaultTexture.dds");
@@ -61,6 +69,7 @@ inline Engine::SpriteComponent::SpriteComponent(D3D11_Graphics* gfx) :
 
 inline Engine::SpriteComponent::~SpriteComponent()
 {
+    m_Resource->Release();
     delete(m_SpriteBatch);
 }
 
@@ -79,10 +88,10 @@ inline void Engine::SpriteComponent::SetSprite(std::wstring filePath)
 {
 
     m_SpritePath = filePath;
-    //CreateDDSTextureFromFile(m_Graphics->Device(), m_SpritePath.c_str(), nullptr, & m_Resource);
+    //TODO: Hook in Resource Manager
     HRESULT hr = CreateDDSTextureFromFile(m_Graphics->Device(), m_SpritePath.c_str(), nullptr, &m_Resource);
     if (FAILED(hr)) {
-        OutputDebugString(L"Uh oh");
+        OutputDebugString(L"Unable to load texture");
     }
 }
 
@@ -106,8 +115,11 @@ inline void Engine::SpriteComponent::Draw(float dt)
 {
     m_SpriteBatch->Begin();
 
-    m_SpriteBatch->Draw(m_Resource, m_SpriteRect, m_SpriteColor);
-    //m_SpriteBatch->Draw(m_Resource, m_SpriteRect, &m_SpriteRect, m_SpriteColor, 0, m_SpritePos, DirectX::SpriteEffects::SpriteEffects_None, 0);
+    //Draw the whole sprite, if size is not specified
+    //m_SpriteBatch->Draw(m_Resource, m_SpritePos, m_SpriteColor);
+
+    //Else, Draw a subrect of the sprite
+    m_SpriteBatch->Draw(m_Resource, m_SpritePos, &m_SpriteRect, m_SpriteColor, 0.0f, m_SpriteOrigin, m_SpriteScale, m_SpriteEffect, m_SpriteDepth);
 
     m_SpriteBatch->End();
 

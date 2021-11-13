@@ -32,7 +32,7 @@ void Engine::Keyboard::OnKeyReleased(int key)
     m_ThisInput.reset(key);
 }
 
-bool Engine::Keyboard::KeyDown(int key) {
+bool Engine::Keyboard::KeyPressed(int key) {
 
     //If the key is out of range, then just return false.
     if (key > MAX_KEY_CODE) {
@@ -43,13 +43,22 @@ bool Engine::Keyboard::KeyDown(int key) {
     if (m_LastInput.test(key) == false && m_ThisInput.test(key) == true) {
         return true;
     }
+
+    ////Else, Check to see if the key is held down.
+    //else {
+    //    return (KeyHeld(key));
+    //}
     return false;
 }
 
-bool Engine::Keyboard::KeyHeld(int key) {
+bool Engine::Keyboard::KeyDown(int key) {
     //If the key is out of range, then just return false.
     if (key > MAX_KEY_CODE) {
         return false;
+    }
+
+    if (KeyPressed(key)) {
+        return true;
     }
 
     ////Accumulate the amount of time the key has been held for

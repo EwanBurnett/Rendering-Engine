@@ -116,6 +116,7 @@ LRESULT __stdcall Engine::Demo::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
         PostQuitMessage(0xdead);
         return 0;
 
+    //TODO: Fix Key Stagnation; Update to use WM_INPUT 
     //Process any keyboard inputs
     case WM_KEYDOWN:
         m_Keyboard->OnKeyPressed(wParam);
@@ -134,6 +135,15 @@ LRESULT __stdcall Engine::Demo::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
     }
 
     return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+void Engine::Demo::SetFrameRate(int fps)
+{
+    if (fps >= 0) {
+        m_FramerateLimit = fps;
+    }
+    
+    m_Graphics->SetFramerate(fps);
 }
 
 void Engine::Demo::Run()

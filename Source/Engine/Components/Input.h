@@ -98,8 +98,8 @@ namespace Engine {
         void OnKeyPressed(int key);
         void OnKeyReleased(int key);
 
+        bool KeyPressed(int key);
         bool KeyDown(int key);
-        bool KeyHeld(int key);
         bool KeyReleased(int key);
 
         void SetHoldDelay(float delay);

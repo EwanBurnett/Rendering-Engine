@@ -104,6 +104,11 @@ DirectX::XMMATRIX Engine::Camera::GetViewProjMatrix()
     return XMMatrixMultiply(viewMatrix, projMatrix);
 }
 
+void Engine::Camera::SetViewMode(ViewMode mode)
+{
+    m_ViewMode = mode;
+}
+
 void Engine::Camera::SetPosition(float x, float y, float z)
 {
     m_Position.x = x;

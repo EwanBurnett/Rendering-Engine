@@ -4,12 +4,12 @@
 #include <Components/SpriteComponent.h>
 #include <iostream>
 
-Engine::TextComponent* textComponent;
-Engine::TextComponent* keyboardView;
-Engine::FPSComponent* fpsComponent;
-Engine::TextComponent* cameraMatrices;
-Engine::TextComponent* warning;
-Engine::SpriteComponent* sprite;
+Engine::TextComponent*      textComponent;
+Engine::TextComponent*      keyboardView;
+Engine::FPSComponent*       fpsComponent;
+Engine::TextComponent*      cameraMatrices;
+Engine::TextComponent*      warning;
+Engine::SpriteComponent*    sprite;
 
 DirectX::XMFLOAT4X4 viewproj;
 int frameLimitSwitch = 0;
@@ -17,10 +17,7 @@ int frameLimitSwitch = 0;
 //Init is called when the application is started.
 void Game::Init()
 {
-    sprite = new Engine::SpriteComponent(m_Graphics.get());
-    sprite->SetPosition(1000, 400);
-    m_Components.push_back(sprite);
-
+    
     textComponent = new Engine::TextComponent(m_Graphics.get());
     textComponent->SetPosition(10, 10);
     textComponent->SetText("Default Rendering Demo\nEwan Burnett [2021]\nA simple demo, demonstrating rendered text.\nFramerate Controls:\n    F1 - uncapped\n    F2 - 15 FPS\n    F3 - 30 FPS\n    F4 - 60 FPS");
@@ -41,6 +38,10 @@ void Game::Init()
     warning->SetColor(1.0f, 0.0f, 0.05f, 1.0f);
     warning->SetPosition(800, 10);
     m_Components.push_back(warning);
+
+    sprite = new Engine::SpriteComponent(m_Graphics.get());
+    sprite->SetPosition(800, 200);
+    m_Components.push_back(sprite);
 
     cameraMatrices = new Engine::TextComponent(m_Graphics.get());
     cameraMatrices->SetColor(0.3f, 0.3f, 0.5f, 1.0f);
@@ -75,23 +76,61 @@ void Game::Update(float dt)
     out << "Keyboard State [Starting from bit 0]: \n" << kbd << "\n\n Last Keyboard State\n" << kbd2 << std::endl;
     keyboardView->SetText(out.str());
 
-    if (m_Keyboard->KeyDown(KB_FNC_F1)) {
-        m_FramerateLimit = 0;
+    if (m_Keyboard->KeyPressed(KB_FNC_F1)) {
+        SetFrameRate(0);
     }
-    if (m_Keyboard->KeyDown(KB_FNC_F2)) {
-        m_FramerateLimit = 15;
+    if (m_Keyboard->KeyPressed(KB_FNC_F2)) {
+        SetFrameRate(10);
     }
-    if (m_Keyboard->KeyDown(KB_FNC_F3)) {
-        m_FramerateLimit = 30;
+    if (m_Keyboard->KeyPressed(KB_FNC_F3)) {
+        SetFrameRate(30);
     }
-    if (m_Keyboard->KeyDown(KB_FNC_F4)) {
-        m_FramerateLimit = 60;
+    if (m_Keyboard->KeyPressed(KB_FNC_F4)) {
+        SetFrameRate(60);
     }
 
-    if (m_Keyboard->KeyDown(KB_DIR_UP)) {
-        m_Camera->Position().x += 0.05f;
+    float speed = 50.0f;
+
+    if (m_Keyboard->KeyPressed(KB_NUM_0)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_PERSPECTIVE);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_1)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_ORBIT);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_2)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_TARGET);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_3)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_TOP);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_4)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_RIGHT);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_5)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_FRONT);
     }
     
+
+    static float theta;
+    static float phi = XMConvertToRadians(40);
+    static float radius;
+
+    if (m_Keyboard->KeyDown(KB_NUM_ADD)) {
+        //m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_ORBIT);
+        m_Camera->Position().x += speed * dt;
+        theta += XMConvertToRadians(0.1 * speed * dt);
+        m_Camera->SetOrbitalAxis(radius, theta, phi);
+    }
+
+    if (m_Keyboard->KeyDown(KB_NUM_SUB)) {
+        //m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_PERSPECTIVE);
+        m_Camera->Position().x -= speed * dt;
+        theta -= XMConvertToRadians(0.1 * speed * dt);
+        m_Camera->SetOrbitalAxis(radius, theta, phi);
+    }
+    
+    
+
     DirectX::XMStoreFloat4x4(&viewproj, m_Camera->GetViewProjMatrix());
     DirectX::XMMATRIX m = m_Camera->GetViewProjMatrix();
     std::stringstream out2;
@@ -108,14 +147,30 @@ void Game::Update(float dt)
 //FixedUpdate is called at a constant rate.
 void Game::FixedUpdate(float dt)
 {
+    float speed = 50.0f;
+    if (m_Keyboard->KeyDown(KB_DIR_UP)) {
+        sprite->SpritePosition().y -= speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_DIR_DOWN)) {
+        sprite->SpritePosition().y += speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_DIR_LEFT)) {
+        sprite->SpritePosition().x -= speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_DIR_RIGHT)) {
+        sprite->SpritePosition().x += speed * dt;
+    }
 }
 
 
 //Exit is called before the application shuts down.
 void Game::Exit()
 {
+    
     delete(textComponent);
-    delete(fpsComponent);
     delete(keyboardView);
+    delete(fpsComponent);
+    delete(cameraMatrices);
     delete(warning);
+    delete(sprite);
 }

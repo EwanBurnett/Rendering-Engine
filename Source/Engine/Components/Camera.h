@@ -28,6 +28,8 @@ namespace Engine {
         DirectX::XMMATRIX GetViewProjMatrix(); //Returns the ViewProj matrix.
 
         //Setter Methods
+        void SetViewMode(ViewMode mode);
+
         void SetPosition(float x = 0, float y = 0, float z = 0);
         void SetPosition(DirectX::FXMVECTOR position);
         DirectX::XMFLOAT3& Position();

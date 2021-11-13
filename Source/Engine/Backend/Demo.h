@@ -50,6 +50,9 @@ namespace Engine
         static const UINT DefaultScreenWidth;
         static const UINT DefaultScreenHeight;
 
+
+        void SetFrameRate(int fps);
+
         HINSTANCE m_hInst;
         std::wstring m_WndClass;
         std::wstring m_WndTitle;
@@ -84,6 +87,8 @@ namespace Engine
       /*  static LRESULT CALLBACK WndProcSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
         static LRESULT CALLBACK WndProcProcess(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);*/
         static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+
 
     };
 
