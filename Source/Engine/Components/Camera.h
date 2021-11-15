@@ -25,7 +25,8 @@ namespace Engine {
 
         void Reset();   //Resets the camera to its default position and orientation.
 
-        DirectX::XMMATRIX GetViewProjMatrix() const; //Returns the ViewProj matrix.
+        DirectX::XMMATRIX GetViewMatrix(); //Returns the View matrix.
+        DirectX::XMMATRIX GetProjectionMatrix(); //Returns the Projection matrix.
 
         //Setter Methods
         void SetPosition(float x = 0, float y = 0, float z = 0);

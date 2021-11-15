@@ -5,6 +5,7 @@ using namespace Engine;
 
 Engine::Camera::Camera()
 {
+    m_ViewMode = ViewMode::VIEW_PERSPECTIVE;
     //TODO: Initialize member variables
     Reset();
 }
@@ -96,11 +97,16 @@ void Engine::Camera::Reset()
     SetOrbitalAxis(10.0f, 0.0f, 0.0f);
 }
 
-DirectX::XMMATRIX Engine::Camera::GetViewProjMatrix() const
+DirectX::XMMATRIX Engine::Camera::GetViewMatrix()
 {
     FXMMATRIX viewMatrix = XMLoadFloat4x4(&m_ViewMatrix);
+    return viewMatrix;
+}
+
+DirectX::XMMATRIX Engine::Camera::GetProjectionMatrix()
+{
     FXMMATRIX projMatrix = XMLoadFloat4x4(&m_ProjMatrix);
-    return XMMatrixMultiply(viewMatrix, projMatrix);
+    return projMatrix;
 }
 
 void Engine::Camera::SetPosition(float x, float y, float z)
