@@ -6,7 +6,9 @@
 #include "..\Utils\Random.h"
 #include "..\Backend\Graphics.h"
 #include "..\Backend\ObjectPool.h"
-#include "..\Components\Keyboard.h"
+#include "..\Components\Input.h"
+#include "..\Components\Camera.h"
+#include "..\resource.h"
 
 namespace Engine
 {
@@ -48,6 +50,9 @@ namespace Engine
         static const UINT DefaultScreenWidth;
         static const UINT DefaultScreenHeight;
 
+
+        void SetFrameRate(int fps);
+
         HINSTANCE m_hInst;
         std::wstring m_WndClass;
         std::wstring m_WndTitle;
@@ -61,10 +66,12 @@ namespace Engine
 
         Time m_Time;
         float m_FixedTimestep;
+        int m_FramerateLimit;
         RNG m_RNG;
+        Camera* m_Camera;
 
         static Keyboard* m_Keyboard;
-
+        
         //Engine::ObjectPool m_ObjectPool;
         std::vector<Engine::GameComponent*> m_Components;  //TODO: Replace with Object Pooling
         std::unique_ptr<D3D11_Graphics> m_Graphics;
@@ -80,6 +87,8 @@ namespace Engine
       /*  static LRESULT CALLBACK WndProcSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
         static LRESULT CALLBACK WndProcProcess(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);*/
         static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+
 
     };
 

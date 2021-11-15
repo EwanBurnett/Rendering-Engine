@@ -29,8 +29,11 @@ namespace Engine {
         DirectX::XMMATRIX GetProjectionMatrix(); //Returns the Projection matrix.
 
         //Setter Methods
+        void SetViewMode(ViewMode mode);
+
         void SetPosition(float x = 0, float y = 0, float z = 0);
         void SetPosition(DirectX::FXMVECTOR position);
+        DirectX::XMFLOAT3& Position();
 
         void SetRollPitchYaw(float roll = 0, float pitch = 0, float yaw = 0);
         void SetSpeed(float speed);

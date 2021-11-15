@@ -98,12 +98,18 @@ namespace Engine {
         void OnKeyPressed(int key);
         void OnKeyReleased(int key);
 
+        bool KeyPressed(int key);
         bool KeyDown(int key);
-        bool KeyHeld(int key);
         bool KeyReleased(int key);
 
+        void SetHoldDelay(float delay);
+
         std::bitset<MAX_KEY_CODE> GetKeyboardState();
+        std::bitset<MAX_KEY_CODE> GetLastKeyboardState();
     private:
+        float m_KeyHoldDelay;
+        float m_DeltaTime;
+
         //Each byte corresponds to an ASCII value. ( 0 - 7F )
         
         std::bitset<MAX_KEY_CODE> m_LastInput;   //Input from the last frame
@@ -114,6 +120,34 @@ namespace Engine {
                                         //                      2 - is ALT pressed
                                         //                      3 - Unused
         
+    };
+
+    class Mouse {
+    public:
+        Mouse();
+
+        void OnMouseMoved(float x, float y);
+    private:
+        bool m_bHasFocus;
+
+        float m_PosX;
+        float m_PosY;
+
+        //The position of the mouse last frame
+        float m_LastPosX; 
+        float m_LastPosY;
+
+        std::bitset<8> m_Keys;  //Each byte corresponds to a mouse key:
+        //0 - Left Mouse Button
+        //1 - Right Mouse Button
+        //2 - Scroll Wheel Button
+        //3 - Scroll Wheel Up
+        //4 - Scroll Wheel Down
+        //5 - Extra Mouse Button 1
+        //6 - Extra Mouse Button 2
+        //7 - Unused
+        //8 - Unused
+
     };
 
 }

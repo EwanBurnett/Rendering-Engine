@@ -14,6 +14,11 @@ D3D11_Graphics::D3D11_Graphics(HWND &hWnd, UINT width, UINT height)
     m_ClientWidth = width;
     m_ClientHeight = height;
 
+    m_bEnable4xMSAA = true;
+    m_bEnableDepthStencil = true;
+
+    m_FrameRate = 60;
+
     m_MSAACount = 4;
     m_MSAAQuality = 1;
 
@@ -28,7 +33,7 @@ D3D11_Graphics::~D3D11_Graphics()
 {
     m_pRenderTargetView->Release();
     m_pDepthStencilView->Release();
-    m_pSwapChain->Release();
+    //m_pSwapChain->Release();
     if (m_pSwapChain != nullptr) {
        // m_pSwapChain->Release();
     }
@@ -43,12 +48,12 @@ D3D11_Graphics::~D3D11_Graphics()
     if (d3dDebug != nullptr) {
         d3dDebug->Release();
     }
-
+   
 #endif
 
-    if (m_pDevice != nullptr) {
+    /*if (m_pDevice.Get() != nullptr) {
         m_pDevice->Release();
-    }
+    }*/
 }
 
 bool D3D11_Graphics::Init()
@@ -95,8 +100,10 @@ bool D3D11_Graphics::Init()
         return false;
     }
 
-    //Swap Chain Buffer Desc
-    DXGI_MODE_DESC bd = { 0 };  
+    //Create the SwapChain
+    //CreateSwapChain();
+     //Swap Chain Buffer Desc
+    DXGI_MODE_DESC bd = { 0 };
     bd.Width = m_ClientWidth;
     bd.Height = m_ClientHeight;
     bd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -121,45 +128,51 @@ bool D3D11_Graphics::Init()
         sd.SampleDesc.Count = 1;
         sd.SampleDesc.Quality = 0;
     }
-   
+
     //Swap Chain Creation
     IDXGIDevice* dxgiDevice = 0;
     hr = m_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
 
     if (FAILED(hr)) {
         MessageBox(m_hWnd, L"Error:\nFailed to query device interface", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
-        return false;
+        return S_FALSE;
     }
 
     IDXGIAdapter* dxgiAdapter = 0;
     hr = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter);
     if (FAILED(hr)) {
         MessageBox(m_hWnd, L"Error:\nFailed to query adapter parent interface", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
-        return false;
+        return S_FALSE;
     }
 
     IDXGIFactory* dxgiFactory = 0;
     hr = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory);
     if (FAILED(hr)) {
         MessageBox(m_hWnd, L"Error:\nfailed to query factory parent interface", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
-        return false;
+        return S_FALSE;
     }
 
     hr = dxgiFactory->CreateSwapChain(dxgiDevice, &sd, m_pSwapChain.ReleaseAndGetAddressOf());
     if (FAILED(hr)) {
         MessageBox(m_hWnd, L"Error:\nFailed to create Swapchain.", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
-        return false;
+        return S_FALSE;
     }
 
     dxgiDevice->Release();
     dxgiAdapter->Release();
     dxgiFactory->Release();
+    
 
     //TODO: Add HR checks (? or take some out)
-    ID3D11Texture2D* backBuffer = nullptr;
+    ID3D11Texture2D* backBuffer;
     m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer);
     backBuffer->GetDesc(&m_BackBufferDesc);
-    m_pDevice->CreateRenderTargetView(backBuffer, nullptr, &m_pRenderTargetView);
+
+    hr = m_pDevice->CreateRenderTargetView(backBuffer, nullptr, &m_pRenderTargetView);
+    if (FAILED(hr)) {
+        MessageBox(m_hWnd, L"Error:\nFailed to create Render Target View.", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
+        return false;
+    }
 
     backBuffer->Release();
     //m_pSwapChain->Release();
@@ -202,8 +215,13 @@ bool D3D11_Graphics::Init()
         dsvd.Texture2D.MipSlice = 0;
         dsvd.Flags = 0;
 
-        m_pDevice->CreateDepthStencilView(depthStencilBuffer, &dsvd, &m_pDepthStencilView);
+        hr = m_pDevice->CreateDepthStencilView(depthStencilBuffer, &dsvd, &m_pDepthStencilView);
                 
+        if (FAILED(hr)) {
+            MessageBox(m_hWnd, L"Error:\nDepth Stencil View Creation Failed", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
+            return false;
+        }
+
         depthStencilBuffer->Release();
     }
 
@@ -221,8 +239,9 @@ bool D3D11_Graphics::Init()
     m_ViewPort.MaxDepth = 1.0f;
 
     m_pContext->RSSetViewports(1, &m_ViewPort);
-    //Compile Shaders 
-    
+
+    //TODO: Compile Shaders 
+    //TODO: Add support for window resizing (Recreate swapchain)
     return true;
 }
 
@@ -233,18 +252,94 @@ void D3D11_Graphics::Clear(float r, float g, float b, float a)
     m_pContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);    
 }
 
+void D3D11_Graphics::SetFramerate(int fps)
+{
+    //TODO: Recreate the swapchain, with the new Framerate.
+    if (fps > 0) {
+        m_FrameRate = fps;
+        //Init();
+    }
+}
+
 ID3D11DeviceContext* D3D11_Graphics::Context()
 {
-    return m_pContext;
+    return m_pContext.Get();
 }
 
 ID3D11Device* D3D11_Graphics::Device()
 {
-    return m_pDevice;
+    return m_pDevice.Get();
 }
 
 IDXGISwapChain* D3D11_Graphics::Swapchain()
 {
     return m_pSwapChain.Get();
+}
+
+HRESULT D3D11_Graphics::CreateSwapChain()
+{
+    HRESULT hr;
+
+    ////Swap Chain Buffer Desc
+    //DXGI_MODE_DESC bd = { 0 };
+    //bd.Width = m_ClientWidth;
+    //bd.Height = m_ClientHeight;
+    //bd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    //bd.RefreshRate.Numerator = m_FrameRate;
+    //bd.RefreshRate.Denominator = 1;
+    //bd.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+    //bd.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+
+    //DXGI_SWAP_CHAIN_DESC sd = { 0 };
+    //sd.BufferDesc = bd;
+    //sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    //sd.BufferCount = 1;
+    //sd.OutputWindow = m_hWnd;
+    //sd.Windowed = true;
+    //sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    //sd.Flags = 0;
+    //if (m_bEnable4xMSAA) {
+    //    sd.SampleDesc.Count = m_MSAACount;
+    //    sd.SampleDesc.Quality = m_MSAAQuality - 1;
+    //}
+    //else {
+    //    sd.SampleDesc.Count = 1;
+    //    sd.SampleDesc.Quality = 0;
+    //}
+
+    ////Swap Chain Creation
+    //IDXGIDevice* dxgiDevice = 0;
+    //hr = m_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
+
+    //if (FAILED(hr)) {
+    //    MessageBox(m_hWnd, L"Error:\nFailed to query device interface", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
+    //    return S_FALSE;
+    //}
+
+    //IDXGIAdapter* dxgiAdapter = 0;
+    //hr = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter);
+    //if (FAILED(hr)) {
+    //    MessageBox(m_hWnd, L"Error:\nFailed to query adapter parent interface", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
+    //    return S_FALSE;
+    //}
+
+    //IDXGIFactory* dxgiFactory = 0;
+    //hr = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory);
+    //if (FAILED(hr)) {
+    //    MessageBox(m_hWnd, L"Error:\nfailed to query factory parent interface", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
+    //    return S_FALSE;
+    //}
+
+    //hr = dxgiFactory->CreateSwapChain(dxgiDevice, &sd, m_pSwapChain.ReleaseAndGetAddressOf());
+    //if (FAILED(hr)) {
+    //    MessageBox(m_hWnd, L"Error:\nFailed to create Swapchain.", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
+    //    return S_FALSE;
+    //}
+
+    //dxgiDevice->Release();
+    //dxgiAdapter->Release();
+    //dxgiFactory->Release();
+
+    return S_OK;
 }
 

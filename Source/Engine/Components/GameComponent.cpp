@@ -21,15 +21,15 @@ void Engine::GameComponent::SetEnabled(bool state)
 
 void Engine::GameComponent::Init()
 {
-    OutputDebugString(L"Init Called");
+    
 }
 
 void Engine::GameComponent::Update(float dt)
 {
-    OutputDebugString(L"Update Called");
+    
 }
 
 void Engine::GameComponent::Draw(float dt)
 {
-    OutputDebugString(L"Draw Called");
+    
 }

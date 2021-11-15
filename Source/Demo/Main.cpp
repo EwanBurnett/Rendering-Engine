@@ -24,4 +24,5 @@ int WINAPI WinMain(
     Game* game = new Game(inst, L"RenderingDemo",L"Rendering Demo [Default]", showCode);
     game->Run();
     
+    delete(game);
 }

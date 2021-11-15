@@ -36,6 +36,8 @@ public:
     bool Init();
     void Clear(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
 
+    void SetFramerate(int fps);
+
     //Returns the ID3D11 Device Context
     ID3D11DeviceContext* Context();
     //Returns the ID3D11 Device
@@ -44,12 +46,14 @@ public:
     IDXGISwapChain* Swapchain();
 
 private:
+    HRESULT CreateSwapChain();
+
     //D3D11 Pointers
-    ID3D11Device* m_pDevice;
-    ID3D11DeviceContext* m_pContext;
+    ComPtr<ID3D11Device> m_pDevice;
+    ComPtr<ID3D11DeviceContext> m_pContext;
     ComPtr<IDXGISwapChain> m_pSwapChain;
 
-    ID3D11Texture2D* m_pDepthStencilBuffer;
+    ComPtr<ID3D11Texture2D> m_pDepthStencilBuffer;
     D3D11_TEXTURE2D_DESC m_BackBufferDesc;
     
     ID3D11RenderTargetView* m_pRenderTargetView;
@@ -63,8 +67,8 @@ private:
     //Graphics Parameters
     UINT m_FrameRate;
     bool m_bIsFullScreen;
-    bool m_bDepthStencilEnabled;
-    bool m_bMultisamplingEnabled;
+    /*bool m_bDepthStencilEnabled;
+    bool m_bMultisamplingEnabled;*/
 
     UINT m_MSAACount;
     UINT m_MSAAQuality;

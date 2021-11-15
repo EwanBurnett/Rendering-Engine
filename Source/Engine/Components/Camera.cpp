@@ -8,6 +8,7 @@ Engine::Camera::Camera()
     m_ViewMode = ViewMode::VIEW_PERSPECTIVE;
     //TODO: Initialize member variables
     Reset();
+    m_ViewMode = ViewMode::VIEW_PERSPECTIVE;
 }
 
 void Engine::Camera::Update(float dt)
@@ -109,6 +110,11 @@ DirectX::XMMATRIX Engine::Camera::GetProjectionMatrix()
     return projMatrix;
 }
 
+void Engine::Camera::SetViewMode(ViewMode mode)
+{
+    m_ViewMode = mode;
+}
+
 void Engine::Camera::SetPosition(float x, float y, float z)
 {
     m_Position.x = x;
@@ -119,6 +125,11 @@ void Engine::Camera::SetPosition(float x, float y, float z)
 void Engine::Camera::SetPosition(DirectX::FXMVECTOR position)
 {
     XMStoreFloat3(&m_Position, position);
+}
+
+DirectX::XMFLOAT3& Engine::Camera::Position()
+{
+    return(m_Position);
 }
 
 void Engine::Camera::SetRollPitchYaw(float roll, float pitch, float yaw)

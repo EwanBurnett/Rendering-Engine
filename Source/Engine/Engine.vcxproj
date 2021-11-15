@@ -25,6 +25,7 @@
     <ClCompile Include="Backend\ObjectPool.cpp" />
     <ClCompile Include="Components\Camera.cpp" />
     <ClCompile Include="Components\GameComponent.cpp" />
+    <ClCompile Include="Components\Input.cpp" />
     <ClCompile Include="Components\Keyboard.cpp" />
     <ClCompile Include="Components\ModelComponent.cpp" />
   </ItemGroup>
@@ -36,12 +37,23 @@
     <ClInclude Include="Components\Camera.h" />
     <ClInclude Include="Components\FPSComponent.h" />
     <ClInclude Include="Components\GameComponent.h" />
-    <ClInclude Include="Components\Keyboard.h" />
+    <ClInclude Include="Components\Input.h" />
     <ClInclude Include="Components\ModelComponent.h" />
+    <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TextComponent.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Utils\Random.h" />
     <ClInclude Include="Utils\RTTI.h" />
     <ClInclude Include="Utils\Time.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\Resources\Textures\AppIcon.ico">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </Image>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -131,6 +143,8 @@
     <PostBuildEvent>
       <Command>mkdir "$(SolutionDir)lib" 
 copy "$(TargetPath)" "$(SolutionDir)lib\"
+copy "$(TargetDir)Engine.pdb" "$(SolutionDir)lib\"
+copy "$(TargetDir)Intermediates\Engine.res" "$(SolutionDir)lib\"
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -163,6 +177,8 @@ copy "$(TargetPath)" "$(SolutionDir)lib\"
     <PostBuildEvent>
       <Command>mkdir "$(SolutionDir)lib" 
 copy "$(TargetPath)" "$(SolutionDir)lib\"
+copy "$(TargetDir)Engine.pdb" "$(SolutionDir)lib\"
+copy "$(TargetDir)Intermediates\Engine.res" "$(SolutionDir)lib\"
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>

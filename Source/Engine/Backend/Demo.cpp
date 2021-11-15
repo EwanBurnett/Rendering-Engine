@@ -18,11 +18,16 @@ Engine::Demo::Demo(HINSTANCE inst, const std::wstring& wndClass, const std::wstr
     m_ScreenHeight = 900;
 
     m_Keyboard = new Keyboard();
+    m_Camera = new Camera();
+    m_Components.push_back(m_Camera);    
+
 }
 
 Engine::Demo::~Demo()
 {
     UnregisterClass(m_WndClass.c_str(), m_hInst);
+    delete(m_Keyboard);
+    delete(m_Camera);
 }
 
 void Engine::Demo::OnMouseMoved(int posX, int posY)
@@ -31,13 +36,15 @@ void Engine::Demo::OnMouseMoved(int posX, int posY)
 
 void Engine::Demo::InitWindow()
 {
+    //HICON icon = static_cast<HICON>(LoadImage(m_hInst, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 32, 32, 0));
+
     ZeroMemory(&m_Window, sizeof(m_Window));
     m_Window.cbSize = sizeof(WNDCLASSEX);
     m_Window.style = CS_CLASSDC;
     m_Window.lpfnWndProc = WndProc;
     m_Window.hInstance = m_hInst;
-    m_Window.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-    m_Window.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+    m_Window.hIcon = static_cast<HICON>(LoadImage(m_hInst, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 32, 32, 0));
+    m_Window.hIconSm = static_cast<HICON>(LoadImage(m_hInst, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 16, 16, 0));
     m_Window.hCursor = LoadCursor(nullptr, IDC_ARROW);
     m_Window.hbrBackground = GetSysColorBrush(COLOR_BTNFACE);
     m_Window.lpszClassName = m_WndClass.c_str();
@@ -109,6 +116,7 @@ LRESULT __stdcall Engine::Demo::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
         PostQuitMessage(0xdead);
         return 0;
 
+    //TODO: Fix Key Stagnation; Update to use WM_INPUT 
     //Process any keyboard inputs
     case WM_KEYDOWN:
         m_Keyboard->OnKeyPressed(wParam);
@@ -129,6 +137,15 @@ LRESULT __stdcall Engine::Demo::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
+void Engine::Demo::SetFrameRate(int fps)
+{
+    if (fps >= 0) {
+        m_FramerateLimit = fps;
+    }
+    
+    m_Graphics->SetFramerate(fps);
+}
+
 void Engine::Demo::Run()
 {
     InitWindow();
@@ -139,6 +156,7 @@ void Engine::Demo::Run()
     m_Time.Reset();
     m_Time.SetTimeScale(1.0f);
 
+    m_FramerateLimit = 0;
     m_RNG.Seed(m_Time.BaseTime());
 
     //m_ObjectPool.Alloc(5000);
@@ -146,7 +164,8 @@ void Engine::Demo::Run()
     //Fixed Timestep logic
     m_FixedTimestep = 1.0f / 60.0f;
     static float accumulator = 0;
-
+    
+    int FPS;
     //Initialize the Demo
     Init();
     PreInit();
@@ -160,12 +179,27 @@ void Engine::Demo::Run()
             //Pre-Update
             m_Time.Tick();
             accumulator += m_Time.DeltaTime();
+            FPS = 1.0f / m_Time.DeltaTime();
+            float fixedFrameTime = 1.0f / m_FramerateLimit;
 
             m_Graphics->Clear(0, 0, 0, 1);
             
-            //Update
-            DoFrame(m_Time.DeltaTime());
-            Update(m_Time.DeltaTime());
+            
+            if (m_FramerateLimit < FPS && m_FramerateLimit > 0) {
+                float sleepTime = 1000 * (fixedFrameTime - m_Time.DeltaTime());
+
+                //Update (Framerate Limited)
+                DoFrame(fixedFrameTime);
+                Update(fixedFrameTime);
+
+                Sleep(sleepTime);
+            }
+            else {
+                //Update
+                DoFrame(m_Time.DeltaTime());
+                Update(m_Time.DeltaTime());
+            }
+            
 
             while (accumulator >= m_FixedTimestep) {
                 //Fixed Update
