@@ -29,6 +29,10 @@ void Engine::GameComponent::Update(float dt)
     
 }
 
+void Engine::GameComponent::FixedUpdate(float dt)
+{
+}
+
 void Engine::GameComponent::Draw(float dt)
 {
     

@@ -17,13 +17,14 @@ namespace Engine {
             VIEW_RIGHT,
             VIEW_FRONT
         };
-
+         
         Camera();
         ~Camera() = default;
         
         void Update(float dt) override;
 
         void Reset();   //Resets the camera to its default position and orientation.
+        void ComputeViewProj(DirectX::FXMVECTOR position, DirectX::FXMVECTOR direction);
 
         DirectX::XMMATRIX GetViewMatrix(); //Returns the View matrix.
         DirectX::XMMATRIX GetProjectionMatrix(); //Returns the Projection matrix.
@@ -34,6 +35,10 @@ namespace Engine {
         void SetPosition(float x = 0, float y = 0, float z = 0);
         void SetPosition(DirectX::FXMVECTOR position);
         DirectX::XMFLOAT3& Position();
+
+        void SetDirection(float x = 0, float y = 0, float z = 0);
+        void SetDirection(DirectX::FXMVECTOR direction);
+        DirectX::XMFLOAT3& Direction();
 
         void SetRollPitchYaw(float roll = 0, float pitch = 0, float yaw = 0);
         void SetSpeed(float speed);

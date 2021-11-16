@@ -13,6 +13,7 @@ namespace Engine {
 
         virtual void Init();
         virtual void Update(float dt);
+        virtual void FixedUpdate(float dt);
         virtual void Draw(float dt);
 
     protected:

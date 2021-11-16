@@ -6,6 +6,7 @@
 #include "..\Components\GameComponent.h"
 
 namespace Engine {
+	//TODO: Implement GameObjects, as containers and controllers for Component objects
 	/*class GameObject {
 	public:
 		GameObject();

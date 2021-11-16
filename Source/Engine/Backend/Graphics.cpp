@@ -22,6 +22,7 @@ D3D11_Graphics::D3D11_Graphics(HWND &hWnd, UINT width, UINT height)
     m_MSAACount = 4;
     m_MSAAQuality = 1;
 
+    //TODO: Replace with Debug layer
     if (!Init()) {
         MessageBox(m_hWnd, L"Error:\nD3D11 Graphics Initialization Failed", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
         PostQuitMessage(0xdeadbeef);
@@ -31,8 +32,9 @@ D3D11_Graphics::D3D11_Graphics(HWND &hWnd, UINT width, UINT height)
 
 D3D11_Graphics::~D3D11_Graphics()
 {
-    m_pRenderTargetView->Release();
-    m_pDepthStencilView->Release();
+    //TODO: Convert everything to use WRL::COMPTR 
+    /*m_pRenderTargetView->Release();
+    m_pDepthStencilView->Release();*/
     //m_pSwapChain->Release();
     if (m_pSwapChain != nullptr) {
        // m_pSwapChain->Release();
@@ -82,9 +84,9 @@ bool D3D11_Graphics::Init()
         featureLevels,
         ARRAYSIZE(featureLevels),
         D3D11_SDK_VERSION,
-        &m_pDevice,
+        m_pDevice.GetAddressOf(),
         &m_FeatureLevel,
-        &m_pContext
+        m_pContext.GetAddressOf()
     );
 
     if (FAILED(hr)) {
@@ -95,14 +97,19 @@ bool D3D11_Graphics::Init()
     
     //Check device for 4xMSAA support. If it is not supported, then D3D11 is not supported.
     m_pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_MSAAQuality);
+
+    //TODO: Replace with Debug layer
     if (m_MSAAQuality <= 0) {
         MessageBox(m_hWnd, L"Error:\n4x MSAA is not supported by the device.", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
         return false;
     }
 
+    //m_pDevice->Release();
+
     //Create the SwapChain
     //CreateSwapChain();
-     //Swap Chain Buffer Desc
+    
+    //Swap Chain Buffer Desc
     DXGI_MODE_DESC bd = { 0 };
     bd.Width = m_ClientWidth;
     bd.Height = m_ClientHeight;
@@ -133,6 +140,7 @@ bool D3D11_Graphics::Init()
     IDXGIDevice* dxgiDevice = 0;
     hr = m_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
 
+    //TODO: Replace with Debug layer
     if (FAILED(hr)) {
         MessageBox(m_hWnd, L"Error:\nFailed to query device interface", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
         return S_FALSE;
@@ -140,22 +148,28 @@ bool D3D11_Graphics::Init()
 
     IDXGIAdapter* dxgiAdapter = 0;
     hr = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter);
+
+    //TODO: Replace with Debug layer
     if (FAILED(hr)) {
         MessageBox(m_hWnd, L"Error:\nFailed to query adapter parent interface", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
-        return S_FALSE;
+        return false;
     }
 
     IDXGIFactory* dxgiFactory = 0;
     hr = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory);
+
+    //TODO: Replace with Debug layer
     if (FAILED(hr)) {
         MessageBox(m_hWnd, L"Error:\nfailed to query factory parent interface", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
-        return S_FALSE;
+        return false;
     }
 
     hr = dxgiFactory->CreateSwapChain(dxgiDevice, &sd, m_pSwapChain.ReleaseAndGetAddressOf());
+
+    //TODO: Replace with Debug layer
     if (FAILED(hr)) {
         MessageBox(m_hWnd, L"Error:\nFailed to create Swapchain.", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
-        return S_FALSE;
+        return false;
     }
 
     dxgiDevice->Release();
@@ -168,7 +182,9 @@ bool D3D11_Graphics::Init()
     m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer);
     backBuffer->GetDesc(&m_BackBufferDesc);
 
-    hr = m_pDevice->CreateRenderTargetView(backBuffer, nullptr, &m_pRenderTargetView);
+    hr = m_pDevice->CreateRenderTargetView(backBuffer, nullptr, m_pRenderTargetView.ReleaseAndGetAddressOf());
+
+    //TODO: Replace with Debug layer
     if (FAILED(hr)) {
         MessageBox(m_hWnd, L"Error:\nFailed to create Render Target View.", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
         return false;
@@ -203,6 +219,7 @@ bool D3D11_Graphics::Init()
         ID3D11Texture2D* depthStencilBuffer;
         hr = m_pDevice->CreateTexture2D(&dsd, nullptr, &depthStencilBuffer);
 
+        //TODO: Replace with Debug layer
         if (FAILED(hr)) {
             MessageBox(m_hWnd, L"Error:\nDepth Stencil Buffer Texture Creation Failed", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
             return false;
@@ -215,8 +232,9 @@ bool D3D11_Graphics::Init()
         dsvd.Texture2D.MipSlice = 0;
         dsvd.Flags = 0;
 
-        hr = m_pDevice->CreateDepthStencilView(depthStencilBuffer, &dsvd, &m_pDepthStencilView);
-                
+        hr = m_pDevice->CreateDepthStencilView(depthStencilBuffer, &dsvd, m_pDepthStencilView.GetAddressOf());
+             
+        //TODO: Replace with Debug layer
         if (FAILED(hr)) {
             MessageBox(m_hWnd, L"Error:\nDepth Stencil View Creation Failed", L"Error: D3D11 Initialization Failed", MB_OK | MB_ICONERROR);
             return false;
@@ -226,7 +244,7 @@ bool D3D11_Graphics::Init()
     }
 
     //Bind our views to the Output Merger
-    m_pContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+    m_pContext->OMSetRenderTargets(1, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());
     
 
     //Setting the Viewport
@@ -248,8 +266,8 @@ bool D3D11_Graphics::Init()
 void D3D11_Graphics::Clear(float r, float g, float b, float a)
 {
     const float clr[4] = { r, g, b, a };
-    m_pContext->ClearRenderTargetView(m_pRenderTargetView, clr);
-    m_pContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);    
+    m_pContext->ClearRenderTargetView(m_pRenderTargetView.Get(), clr);
+    m_pContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);    
 }
 
 void D3D11_Graphics::SetFramerate(int fps)
@@ -278,7 +296,8 @@ IDXGISwapChain* D3D11_Graphics::Swapchain()
 
 HRESULT D3D11_Graphics::CreateSwapChain()
 {
-    HRESULT hr;
+    //TODO: Encapsulate SwapChain creation, and add Resize support
+    //HRESULT hr;
 
     ////Swap Chain Buffer Desc
     //DXGI_MODE_DESC bd = { 0 };

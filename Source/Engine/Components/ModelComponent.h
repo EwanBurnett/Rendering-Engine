@@ -12,7 +12,7 @@
 #include "..\Backend\Graphics.h"
 #include "Camera.h"
 
-typedef struct Vertex {
+struct Vertex {
     Vertex(DirectX::XMFLOAT3 Position, DirectX::XMFLOAT4 Color) : position(Position), color(Color){}
 
     DirectX::XMFLOAT3 position;
@@ -24,8 +24,22 @@ namespace Engine {
     class ModelComponent : public GameComponent {
     public:
         ModelComponent(D3D11_Graphics* gfx, Camera* cam);
+        ~ModelComponent();
 
+        void Update(float dt) override;
         void Draw(float dt) override;
+
+        void Reset();
+
+        void SetScale(float x = 1.0f, float y = 1.0f, float z = 1.0f);
+        void SetRotation(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+        void SetTranslation(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+
+    protected:
+        XMFLOAT3 m_Scale;
+        XMFLOAT3 m_Rotation;
+        XMFLOAT3 m_Translation;
+
     private:
         ID3D11Device* m_pDevice;
         ID3D11DeviceContext* m_pContext;

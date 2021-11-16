@@ -7,11 +7,28 @@
 
 namespace Keys {
     //Define commonly used keyboard key macros
+#define KB_KEY_BACK     0x08
+#define KB_KEY_TAB      0x09
+
+#define KB_KEY_ENTER    0x0D
+
+#define KB_KEY_SHIFT    0x10
+#define KB_KEY_CTRL     0x11
+
+#define KB_KEY_ESC      0x1B
+
+#define KB_KEY_SPACE    0x20
+#define KB_KEY_PGUP     0x21
+#define KB_KEY_PGDN     0x22
 
 #define KB_DIR_LEFT     0x25
 #define KB_DIR_UP       0x26
 #define KB_DIR_RIGHT    0x27
 #define KB_DIR_DOWN     0x28
+
+#define KB_KEY_PRTSCN   0x2C
+#define KB_KEY_INS      0x2D
+#define KB_KEY_DEL      0x2E
 
 #define KB_KEY_0        0x30
 #define KB_KEY_1        0x31
@@ -98,14 +115,21 @@ namespace Engine {
         void OnKeyPressed(int key);
         void OnKeyReleased(int key);
 
+        //Returns true if the key has just been pressed
         bool KeyPressed(int key);
+
+        //Returns true if the key is pressed down 
         bool KeyDown(int key);
+
+        //Returns true if the key has just been released
         bool KeyReleased(int key);
 
+        //TODO: Implement Key Held logic (accumulated held time)
         void SetHoldDelay(float delay);
 
         std::bitset<MAX_KEY_CODE> GetKeyboardState();
         std::bitset<MAX_KEY_CODE> GetLastKeyboardState();
+
     private:
         float m_KeyHoldDelay;
         float m_DeltaTime;
@@ -115,6 +139,7 @@ namespace Engine {
         std::bitset<MAX_KEY_CODE> m_LastInput;   //Input from the last frame
         std::bitset<MAX_KEY_CODE> m_ThisInput;   //Input from this frame
 
+        //TODO: Upgrade to use WM_INPUT messages
         std::bitset<4> m_KeyContext;    //Context Bit Flags:    0 - is CTRL pressed
                                         //                      1 - is SHIFT pressed
                                         //                      2 - is ALT pressed
@@ -124,6 +149,7 @@ namespace Engine {
 
     class Mouse {
     public:
+        //TODO: Implement Mouse input
         Mouse();
 
         void OnMouseMoved(float x, float y);

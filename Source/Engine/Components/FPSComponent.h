@@ -12,8 +12,8 @@ namespace Engine {
     class FPSComponent : public Engine::TextComponent {
     public:
         FPSComponent(Time* time, D3D11_Graphics* gfx);
-
         void Update(float dt) override;
+        void FixedUpdate(float dt) override;
 
     private:
         int m_FrameRate;
@@ -36,7 +36,10 @@ inline Engine::FPSComponent::FPSComponent(Time* time, D3D11_Graphics* gfx) : Tex
 
 inline void Engine::FPSComponent::Update(float dt)
 {
-    m_FrameRate = static_cast<int>(1/m_Time->DeltaTime());
-    
+}
+
+inline void Engine::FPSComponent::FixedUpdate(float dt)
+{
+    m_FrameRate = static_cast<int>(1 / m_Time->DeltaTime());
     m_TextLabel = "Debug Frame Statistics \nFrameRate: " + std::to_string(m_FrameRate) + "\nCurrent Frame Time: " + std::to_string(m_Time->DeltaTime()) + "\nTotal Elapsed Time: " + std::to_string(m_Time->TotalTime());
 }

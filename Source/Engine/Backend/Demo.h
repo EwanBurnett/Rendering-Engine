@@ -6,7 +6,7 @@
 #include "..\Utils\Random.h"
 #include "..\Backend\Graphics.h"
 #include "..\Backend\ObjectPool.h"
-#include "..\Components\Input.h"
+#include "..\Utils\Input.h"
 #include "..\Components\Camera.h"
 #include "..\resource.h"
 
@@ -34,6 +34,7 @@ namespace Engine
 
         void PreInit();
         void DoFrame(float dt);
+        void DoFixedFrame(float dt);
         void Draw(float dt);
 
     protected:

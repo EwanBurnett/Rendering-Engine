@@ -7,6 +7,7 @@
 namespace Engine {
 	typedef std::map<Engine::GameObject::ObjectID, Engine::GameObject::StrongGameobjectPtr*> Pool;
 
+	//TODO: Get this working as a Frame based resource allocator
 	class ObjectPool {
 	public:
 		ObjectPool();

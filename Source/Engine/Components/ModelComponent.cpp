@@ -2,13 +2,12 @@
 using namespace DirectX;
 
 Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
-{
+{   
 
-    XMMATRIX m = XMMatrixRotationRollPitchYaw(15, 45, 30) * XMMatrixTranslation(0, 0, -8);
-    XMStoreFloat4x4(&m_WorldMatrix, m);
+    Reset();
 
     UINT shaderFlags = 0;
-    //
+    
     m_pDevice = gfx->Device();
     m_pContext = gfx->Context();
 
@@ -27,20 +26,21 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     //D3DCompileFromFile(L"S", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
     if (FAILED(hr))
     {
-        //
+        //TODO: Do some error handling
     }
     if(errorMessages != nullptr) {
-        //Do some error handling
+        //TODO: Do some error handling
         OutputDebugString((LPCWSTR)errorMessages->GetBufferPointer());
     }
 
-    if (compiledShader != nullptr) {
-        hr = D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(), 0, m_pDevice, &m_Effect);
+    if (compiledShader == nullptr) {
+        //TODO: Do some error handling
     }
 
+    hr = D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(), 0, m_pDevice, &m_Effect);
 
     if (FAILED(hr)) {
-        //do more error checking
+        //TODO: Do some error handling
     }
 
     compiledShader->Release();
@@ -48,23 +48,25 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     //Retrieving Techniques, passes and variables
     m_Technique = m_Effect->GetTechniqueByName("main11");
     if (m_Technique == nullptr) {
-        //More error checking...
+        //TODO: Do some error handling
     }
 
     m_Pass = m_Technique->GetPassByName("p0");
     if (m_Pass == nullptr) {
-        //TODO: Error Check for Pass
+        //TODO: Do some error handling
     }
 
     ID3DX11EffectVariable* var = m_Effect->GetVariableByName("WorldViewProjection");
     if (var == nullptr) {
-        //You know the drill
+        //TODO: Do some error handling
     }
 
     m_WVPVar = var->AsMatrix();
     if (m_WVPVar->IsValid() == false) {
-        //...
+        //TODO: Do some error handling
     }
+
+    var->Release();
 
     //Create an input layout
     D3DX11_PASS_DESC passDesc;
@@ -77,7 +79,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
 
     hr = m_pDevice->CreateInputLayout(inputElementDescriptions, ARRAYSIZE(inputElementDescriptions), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &m_InputLayout);
     if (FAILED(hr)) {
-        //Whaddya think
+        //TODO: Do some error handling
     }
 
     //Create a vertex buffer
@@ -106,7 +108,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
 
     hr = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, &m_VertexBuffer);
     if (FAILED(hr)) {
-        //...
+        //TODO: Do some error handling
     }
     /*UINT stride = sizeof(Vertex);
     UINT offset = 0;
@@ -145,7 +147,33 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     //Bind the buffer to the pipeline
     m_pContext->IASetIndexBuffer(mIB, DXGI_FORMAT_R32_UINT, 0);
 
+    mIB->Release();
+}
 
+Engine::ModelComponent::~ModelComponent()
+{
+    //Release acquired interfaces
+    //m_pDevice->Release();
+    //m_pContext->Release();
+
+    //m_Effect->Release();
+    //m_Technique->Release();
+    //m_Pass->Release();
+    //m_WVPVar->Release();
+
+    m_InputLayout->Release();
+    m_VertexBuffer->Release();
+
+}
+
+void Engine::ModelComponent::Update(float dt)
+{
+    XMVECTOR scale = XMLoadFloat3(&m_Scale);
+    XMVECTOR rotation = XMLoadFloat3(&m_Rotation);
+    XMVECTOR translation = XMLoadFloat3(&m_Translation);
+
+    XMMATRIX m = XMMatrixScalingFromVector(scale) * XMMatrixRotationRollPitchYawFromVector(rotation) * XMMatrixTranslationFromVector(translation);
+    XMStoreFloat4x4(&m_WorldMatrix, m);
 }
 
 void Engine::ModelComponent::Draw(float dt)
@@ -167,4 +195,27 @@ void Engine::ModelComponent::Draw(float dt)
     
     m_pContext->DrawIndexed(36, 0, 0);
     //m_pContext->Draw(4, 0);
+}
+
+void Engine::ModelComponent::Reset()
+{
+    XMStoreFloat3(&m_Scale, XMVectorSet(1, 1, 1, 1));
+    XMStoreFloat3(&m_Rotation, XMVectorZero());
+    XMStoreFloat3(&m_Translation, XMVectorZero());
+}
+
+void Engine::ModelComponent::SetScale(float x, float y, float z)
+{
+    XMStoreFloat3(&m_Scale, XMVectorSet(x, y, z, 1));
+}
+
+void Engine::ModelComponent::SetRotation(float x, float y, float z)
+{
+    XMStoreFloat3(&m_Rotation, XMVectorSet(
+        XMConvertToRadians(x), XMConvertToRadians(y), XMConvertToRadians(z), 1));
+}
+
+void Engine::ModelComponent::SetTranslation(float x, float y, float z)
+{
+    XMStoreFloat3(&m_Translation, XMVectorSet(x, y, z, 1));
 }

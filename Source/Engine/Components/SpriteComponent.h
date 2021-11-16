@@ -27,6 +27,9 @@ namespace Engine {
 
         void SetSprite(std::wstring text);
         void SetColor(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
+        void SetRect(int left, int top, int width, int height);
+        void SetLayerDepth(float depth);
+        void SetScale(float scale);
 
         void Init() override;
         void Update(float dt) override;
@@ -42,6 +45,9 @@ namespace Engine {
         SpriteEffects m_SpriteEffect;
         float m_SpriteDepth;
 
+        int m_SpriteWidth;
+        int m_SpriteHeight;
+
     private:
         SpriteBatch* m_SpriteBatch;
         ID3D11ShaderResourceView* m_Resource;
@@ -55,15 +61,17 @@ inline Engine::SpriteComponent::SpriteComponent(D3D11_Graphics* gfx) :
 {
     
     m_SpriteColor = { 1.0f, 1.0f, 1.0f, 0.2f };
-    m_SpriteEffect = SpriteEffects_FlipHorizontally;
+    m_SpriteEffect = SpriteEffects_None;
     m_SpriteDepth = 0.0f;
     m_SpriteOrigin = XMFLOAT2(0, 0);
     m_SpriteScale = 1.0f;
-
-    m_SpriteRect = { 0, 0, 512, 256 };
+    
     m_Graphics = gfx;
+
     SetPosition(0, 0);
     SetSprite(L"..\\..\\Resources\\Textures\\DefaultTexture.dds");
+
+    SetRect(0, 0, m_SpriteWidth, m_SpriteHeight);
 }
 
 
@@ -86,18 +94,38 @@ inline XMFLOAT2& Engine::SpriteComponent::SpritePosition()
 
 inline void Engine::SpriteComponent::SetSprite(std::wstring filePath)
 {
-
     m_SpritePath = filePath;
+
     //TODO: Hook in Resource Manager
+    //Load the texture from file
     HRESULT hr = CreateDDSTextureFromFile(m_Graphics->Device(), m_SpritePath.c_str(), nullptr, &m_Resource);
     if (FAILED(hr)) {
         OutputDebugString(L"Unable to load texture");
     }
+    
+    //Acquire the width and height of the texture
+    ID3D11Texture2D* t;
+    ID3D11Resource* r;
+    m_Resource->GetResource(&r);
+    r->QueryInterface<ID3D11Texture2D>(&t);
+    D3D11_TEXTURE2D_DESC d;
+    t->GetDesc(&d);
+    
+    r->Release();
+    t->Release();
+
+    m_SpriteWidth = d.Width;
+    m_SpriteHeight = d.Height;
 }
 
 inline void Engine::SpriteComponent::SetColor(float r, float g, float b, float a)
 {
     m_SpriteColor = { r, g, b, a };
+}
+
+inline void Engine::SpriteComponent::SetRect(int left, int top, int width, int height)
+{
+    m_SpriteRect = { left, top, width, height };
 }
 
 inline void Engine::SpriteComponent::Init()
@@ -115,10 +143,10 @@ inline void Engine::SpriteComponent::Draw(float dt)
 {
     m_SpriteBatch->Begin();
 
-    //Draw the whole sprite, if size is not specified
+    //TODO: Draw the whole sprite, if size is not specified
     //m_SpriteBatch->Draw(m_Resource, m_SpritePos, m_SpriteColor);
 
-    //Else, Draw a subrect of the sprite
+    //TODO: Else, Draw a subrect of the sprite
     m_SpriteBatch->Draw(m_Resource, m_SpritePos, &m_SpriteRect, m_SpriteColor, 0.0f, m_SpriteOrigin, m_SpriteScale, m_SpriteEffect, m_SpriteDepth);
 
     m_SpriteBatch->End();

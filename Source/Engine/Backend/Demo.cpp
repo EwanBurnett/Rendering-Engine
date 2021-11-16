@@ -25,9 +25,22 @@ Engine::Demo::Demo(HINSTANCE inst, const std::wstring& wndClass, const std::wstr
 
 Engine::Demo::~Demo()
 {
+    for (size_t itr = 0; itr < m_Components.size(); itr++) {
+        delete(m_Components.at(itr));
+    }
+
     UnregisterClass(m_WndClass.c_str(), m_hInst);
     delete(m_Keyboard);
-    delete(m_Camera);
+}
+
+HINSTANCE Engine::Demo::Instance() const
+{
+    return m_hInst;
+}
+
+HWND Engine::Demo::WindowHandle() const
+{
+    return m_WindowHandle;
 }
 
 void Engine::Demo::OnMouseMoved(int posX, int posY)
@@ -146,6 +159,16 @@ void Engine::Demo::SetFrameRate(int fps)
     m_Graphics->SetFramerate(fps);
 }
 
+int Engine::Demo::ScreenWidth() const
+{
+    return m_ScreenWidth;
+}
+
+int Engine::Demo::ScreenHeight() const
+{
+    return m_ScreenHeight;
+}
+
 void Engine::Demo::Run()
 {
     InitWindow();
@@ -203,14 +226,17 @@ void Engine::Demo::Run()
 
             while (accumulator >= m_FixedTimestep) {
                 //Fixed Update
+                DoFixedFrame(m_FixedTimestep);
                 FixedUpdate(m_FixedTimestep);
-                accumulator -= m_FixedTimestep;
+                accumulator = 0;
             }
 
+            //Post-Update
             Draw(m_Time.DeltaTime());
 
+            //TODO: Optimize vertex buffers
             m_Graphics->Swapchain()->Present(0, 0);
-            //Post-Update
+            
         }
     }
 
@@ -231,6 +257,7 @@ void Engine::Demo::Update(float dt)
 
 void Engine::Demo::FixedUpdate(float dt)
 {
+    
 }
 
 void Engine::Demo::PreInit()
@@ -248,6 +275,15 @@ void Engine::Demo::DoFrame(float dt)
     for (auto& obj : m_Components) {
         if (obj->IsEnabled()) {
             obj->Update(dt);
+        }
+    }
+}
+
+void Engine::Demo::DoFixedFrame(float dt)
+{
+    for (auto& obj : m_Components) {
+        if (obj->IsEnabled()) {
+            obj->FixedUpdate(dt);
         }
     }
 }

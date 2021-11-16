@@ -25,9 +25,8 @@
     <ClCompile Include="Backend\ObjectPool.cpp" />
     <ClCompile Include="Components\Camera.cpp" />
     <ClCompile Include="Components\GameComponent.cpp" />
-    <ClCompile Include="Components\Input.cpp" />
-    <ClCompile Include="Components\Keyboard.cpp" />
     <ClCompile Include="Components\ModelComponent.cpp" />
+    <ClCompile Include="Utils\Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Backend\Demo.h" />
@@ -37,12 +36,13 @@
     <ClInclude Include="Components\Camera.h" />
     <ClInclude Include="Components\FPSComponent.h" />
     <ClInclude Include="Components\GameComponent.h" />
-    <ClInclude Include="Components\Input.h" />
     <ClInclude Include="Components\ModelComponent.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TextComponent.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Utils\Input.h" />
     <ClInclude Include="Utils\Random.h" />
+    <ClInclude Include="Utils\RenderStateHelper.h" />
     <ClInclude Include="Utils\RTTI.h" />
     <ClInclude Include="Utils\Time.h" />
   </ItemGroup>
@@ -54,6 +54,13 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Resources\Effects\BasicEffect.fx">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </None>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

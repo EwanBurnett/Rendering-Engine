@@ -13,11 +13,37 @@ cbuffer CBufferPerObject
 	float4x4 WorldViewProjection :  WORLDVIEWPROJECTION;
 }
 
-RasterizerState DisableCulling
-{
-	CullMode = NONE;
+BlendState Default{
+	AlphaToCoverageEnable = TRUE;
+
 };
 
+DepthStencilState EnableDepth{
+	DepthEnable = TRUE;
+    DepthWriteMask = ALL;
+    DepthFunc = LESS_EQUAL;
+};
+
+RasterizerState DisableCulling
+{
+	FillMode = SOLID;
+	CullMode = NONE;
+	FrontCounterClockwise = FALSE;
+};
+
+RasterizerState CullBackFacing
+{
+	FillMode = SOLID;
+	CullMode = BACK;
+	FrontCounterClockwise = FALSE;
+};
+
+RasterizerState CullFrontFacing
+{
+	FillMode = SOLID;
+	CullMode = FRONT;
+	FrontCounterClockwise = FALSE;
+};
 //Struct for the Vertex Shader input
 struct VS_IN
 {
@@ -55,6 +81,8 @@ technique11 main11
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, pixel_shader()));
 
+		//SetBlendState(Default, 0);
+		SetDepthStencilState(EnableDepth, 0);
 		SetRasterizerState(DisableCulling);
 	}
 

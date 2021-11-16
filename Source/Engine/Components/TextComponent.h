@@ -42,13 +42,21 @@ namespace Engine {
         SpriteFont* m_SpriteFont;
               
         D3D11_Graphics* m_Graphics;
+
+        ID3D11RasterizerState* prevRastState;
+        ID3D11BlendState* prevBlendState;
+        ID3D11DepthStencilState* prevDSState;
+
+        FLOAT* blendFactor = new FLOAT[4];
+        UINT sampleMask;
+        UINT stencilRef;
     };
 }
 
 inline Engine::TextComponent::TextComponent(D3D11_Graphics* gfx) :
     m_SpriteBatch(nullptr), m_SpriteFont(nullptr)
 {
-    m_Font = L"Resources\\Fonts\\Arial_14_Regular.spritefont";
+    m_Font = L"..\\..\\Resources\\Fonts\\Arial_14_Regular.spritefont";
     m_TextColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     m_Graphics = gfx;
@@ -61,6 +69,17 @@ inline Engine::TextComponent::~TextComponent()
 {
     delete(m_SpriteBatch);
     delete(m_SpriteFont);
+
+    delete(blendFactor);
+    if (prevRastState != nullptr) {
+        prevRastState->Release();
+    }
+    if (prevBlendState != nullptr) {
+        prevBlendState->Release();
+    }
+    if (prevDSState != nullptr) {
+        prevDSState->Release();
+    }
 }
 
 inline void Engine::TextComponent::SetPosition(float x, float y)
@@ -98,10 +117,29 @@ inline void Engine::TextComponent::Update(float dt)
 
 inline void Engine::TextComponent::Draw(float dt)
 {
+    //TODO: Fix Render State caching, so we can draw text and 3d geometry properly
+    //Spritebatch messes with our render states, so cache the current ones before drawing, and restore them after
+    //m_Graphics->Context()->RSGetState(&prevRastState);
+    //m_Graphics->Context()->OMGetBlendState(&prevBlendState, blendFactor, &sampleMask);
+    //m_Graphics->Context()->OMGetDepthStencilState(&prevDSState, &stencilRef);
+
     m_SpriteBatch->Begin();
 
     m_SpriteFont->DrawString(m_SpriteBatch, m_TextLabel.c_str(), m_TextPos, m_TextColor);
 
     m_SpriteBatch->End();
+    
+    //m_Graphics->Context()->OMSetDepthStencilState(prevDSState, stencilRef);
+    //m_Graphics->Context()->OMSetBlendState(prevBlendState, blendFactor, sampleMask);
+    //m_Graphics->Context()->RSSetState(prevRastState);
+
+    
+    /*m_Graphics->Context()->OMSetDepthStencilState(nullptr, UINT_MAX);
+    m_Graphics->Context()->OMSetBlendState(nullptr, nullptr, UINT_MAX);
+    m_Graphics->Context()->RSSetState(nullptr);*/
+
+    /*prevDSState->Release();
+    prevBlendState->Release();
+    prevRastState->Release();*/
 
 }

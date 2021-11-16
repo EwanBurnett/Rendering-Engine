@@ -8,6 +8,8 @@ class Time {
 public:
 	Time();
 
+	//TODO: Add query methods to return the time in hours, minutes and seconds.
+	
 	//Returns time in seconds
 	float TotalTime() const;
 	//Returns the Interval between frames. 
