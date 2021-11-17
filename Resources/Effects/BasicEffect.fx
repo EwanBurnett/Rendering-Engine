@@ -83,7 +83,7 @@ technique11 main11
 
 		//SetBlendState(Default, 0);
 		//SetDepthStencilState(EnableDepth, 0);
-		SetRasterizerState(DisableCulling);
+		//SetRasterizerState(DisableCulling);
 	}
 
 }

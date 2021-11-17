@@ -1,4 +1,5 @@
- #include "ModelComponent.h"
+#include "ModelComponent.h"
+
 using namespace DirectX;
 
 Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)

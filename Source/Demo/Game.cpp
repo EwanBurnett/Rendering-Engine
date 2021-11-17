@@ -35,18 +35,14 @@ void Game::Init()
     keyboardView->SetColor(0.05f, 0.2f, 1.0f, 1.0f);
     m_Components.push_back(keyboardView);
 
-    keyboardView->SetEnabled(false);
+
     warning = new Engine::TextComponent(m_Graphics.get());
-    warning->SetText("DON'T EVEN THINK ABOUT MOVING ONTO\nRENDERING BEFORE YOU FULLY IMPLEMENT AND TEST\nALL THIS BACKEND STUFF!!!\n+ Keyboard Input\n- Mouse Input\n- Building Fonts\n- Object Pooling\n+ Camera Matrices\n+ Framerate Limiting\n- Game Objects\n- Byte Alignment\n- OPTIMISATIONS\n+ Warnings\n+ Memory Leaks\n- COM Pointers\n- Sprite Component\n- COMMENTING\n- ARCHITECTURAL DESIGN DOCUMENT!!!!!!!!!\n+ Icons\n- ...and tidying up :D\nHave Fun <3");
+    warning->SetText("DON'T EVEN THINK ABOUT MOVING ONTO\nRENDERING BEFORE YOU FULLY IMPLEMENT AND TEST\nALL THIS BACKEND STUFF!!!\n+ Keyboard Input\n- Mouse Input\n+ Building Fonts\n- Object Pooling\n+ Camera Matrices\n+ Framerate Limiting\n- Game Objects\n- Byte Alignment\n- OPTIMISATIONS\n+ Warnings\n+ Memory Leaks\n+ COM Pointers\n+ Sprite Component\n- COMMENTING\n- ARCHITECTURAL DESIGN DOCUMENT!!!!!!!!!\n+ Icons\n- ...and tidying up :D\nHave Fun <3");
     warning->SetColor(1.0f, 0.0f, 0.05f, 1.0f);
     warning->SetPosition(800, 10);
     m_Components.push_back(warning);
 
-    sprite = new Engine::SpriteComponent(m_Graphics.get());
-    sprite->SetPosition(800, 200);
-    sprite->SetColor(0, 1, 0, 1);
-    sprite->SetRect(0, 0, 200, 200);
-    m_Components.push_back(sprite);
+    
 
 
     cameraMatrices = new Engine::TextComponent(m_Graphics.get());
@@ -60,6 +56,12 @@ void Game::Init()
     model->SetTranslation(10, 10, 0);
     model->SetScale(2, 10, 4);
     m_Components.push_back(model);
+
+    sprite = new Engine::SpriteComponent(m_Graphics.get());
+    sprite->SetPosition(800, 200);
+    sprite->SetColor(0, 1, 0, 1);
+    sprite->SetRect(0, 0, 200, 200);
+    m_Components.push_back(sprite);
 
     model2 = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
     m_Components.push_back(model2);
