@@ -51,6 +51,7 @@ namespace Engine {
 
         ID3D11InputLayout* m_InputLayout;
         ID3D11Buffer* m_VertexBuffer;
+        ID3D11Buffer* m_IndexBuffer;
 
         Camera* m_Camera;
         DirectX::XMFLOAT4X4 m_WorldMatrix;

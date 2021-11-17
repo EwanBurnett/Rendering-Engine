@@ -82,7 +82,7 @@ technique11 main11
 		SetPixelShader(CompileShader(ps_5_0, pixel_shader()));
 
 		//SetBlendState(Default, 0);
-		SetDepthStencilState(EnableDepth, 0);
+		//SetDepthStencilState(EnableDepth, 0);
 		SetRasterizerState(DisableCulling);
 	}
 

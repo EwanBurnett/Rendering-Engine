@@ -119,9 +119,19 @@ inline void Engine::TextComponent::Draw(float dt)
 {
     //TODO: Fix Render State caching, so we can draw text and 3d geometry properly
     //Spritebatch messes with our render states, so cache the current ones before drawing, and restore them after
-    //m_Graphics->Context()->RSGetState(&prevRastState);
-    //m_Graphics->Context()->OMGetBlendState(&prevBlendState, blendFactor, &sampleMask);
-    //m_Graphics->Context()->OMGetDepthStencilState(&prevDSState, &stencilRef);
+    if (prevRastState != nullptr) {
+        prevRastState->Release();
+    }
+    if (prevBlendState != nullptr) {
+        prevBlendState->Release();
+    }
+    if (prevDSState != nullptr) {
+        prevDSState->Release();
+    }
+
+    m_Graphics->Context()->RSGetState(&prevRastState);
+    m_Graphics->Context()->OMGetBlendState(&prevBlendState, blendFactor, &sampleMask);
+    m_Graphics->Context()->OMGetDepthStencilState(&prevDSState, &stencilRef);
 
     m_SpriteBatch->Begin();
 
@@ -129,9 +139,9 @@ inline void Engine::TextComponent::Draw(float dt)
 
     m_SpriteBatch->End();
     
-    //m_Graphics->Context()->OMSetDepthStencilState(prevDSState, stencilRef);
-    //m_Graphics->Context()->OMSetBlendState(prevBlendState, blendFactor, sampleMask);
-    //m_Graphics->Context()->RSSetState(prevRastState);
+    m_Graphics->Context()->OMSetDepthStencilState(prevDSState, stencilRef);
+    m_Graphics->Context()->OMSetBlendState(prevBlendState, blendFactor, sampleMask);
+    m_Graphics->Context()->RSSetState(prevRastState);
 
     
     /*m_Graphics->Context()->OMSetDepthStencilState(nullptr, UINT_MAX);

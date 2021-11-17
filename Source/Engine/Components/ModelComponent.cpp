@@ -124,6 +124,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
         3, 7, 4,	3, 4, 0, //Left Face
         4, 6, 5,	4, 7, 6, //Top Face
     };
+    
 
     //mIndexCount = sizeof(indices);
 
@@ -140,14 +141,10 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     D3D11_SUBRESOURCE_DATA iInitData;
     iInitData.pSysMem = indices;
 
-    //Create the buffer
-   ID3D11Buffer* mIB;
-    m_pDevice->CreateBuffer(&ibd, &iInitData, &mIB);
+    //Create the index buffer
+    m_pDevice->CreateBuffer(&ibd, &iInitData, &m_IndexBuffer);
 
-    //Bind the buffer to the pipeline
-    m_pContext->IASetIndexBuffer(mIB, DXGI_FORMAT_R32_UINT, 0);
-
-    mIB->Release();
+   
 }
 
 Engine::ModelComponent::~ModelComponent()
@@ -185,6 +182,8 @@ void Engine::ModelComponent::Draw(float dt)
     UINT offset = 0;
     m_pContext->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
+    m_pContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
     XMMATRIX world = XMLoadFloat4x4(&m_WorldMatrix);
     XMMATRIX wvp = world * m_Camera->GetViewMatrix() * m_Camera->GetProjectionMatrix();
 
@@ -194,7 +193,6 @@ void Engine::ModelComponent::Draw(float dt)
 
     
     m_pContext->DrawIndexed(36, 0, 0);
-    //m_pContext->Draw(4, 0);
 }
 
 void Engine::ModelComponent::Reset()

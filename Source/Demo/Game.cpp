@@ -12,6 +12,7 @@ Engine::TextComponent*      cameraMatrices;
 Engine::TextComponent*      warning;
 Engine::SpriteComponent*    sprite;
 Engine::ModelComponent*     model;
+Engine::ModelComponent*     model2;
 
 DirectX::XMFLOAT4X4 viewproj;
 int frameLimitSwitch = 0;
@@ -22,36 +23,36 @@ void Game::Init()
     textComponent = new Engine::TextComponent(m_Graphics.get());
     textComponent->SetPosition(10, 10);
     textComponent->SetText("Default Rendering Demo\nEwan Burnett [2021]\nA simple demo, demonstrating rendered text.\nFramerate Controls:\n    F1 - uncapped\n    F2 - 15 FPS\n    F3 - 30 FPS\n    F4 - 60 FPS");
-    //m_Components.push_back(textComponent);
+    m_Components.push_back(textComponent);
 
     fpsComponent = new Engine::FPSComponent(&m_Time, m_Graphics.get());
     fpsComponent->TextPosition() = DirectX::XMFLOAT2(400, 10);
     fpsComponent->SetColor(0.0f, 1.0f, 0.25f);
-    //m_Components.push_back(fpsComponent);
+    m_Components.push_back(fpsComponent);
 
     keyboardView = new Engine::TextComponent(m_Graphics.get());
     keyboardView->SetPosition(10, 460);
     keyboardView->SetColor(0.05f, 0.2f, 1.0f, 1.0f);
-    //m_Components.push_back(keyboardView);
+    m_Components.push_back(keyboardView);
 
     keyboardView->SetEnabled(false);
     warning = new Engine::TextComponent(m_Graphics.get());
     warning->SetText("DON'T EVEN THINK ABOUT MOVING ONTO\nRENDERING BEFORE YOU FULLY IMPLEMENT AND TEST\nALL THIS BACKEND STUFF!!!\n+ Keyboard Input\n- Mouse Input\n- Building Fonts\n- Object Pooling\n+ Camera Matrices\n+ Framerate Limiting\n- Game Objects\n- Byte Alignment\n- OPTIMISATIONS\n+ Warnings\n+ Memory Leaks\n- COM Pointers\n- Sprite Component\n- COMMENTING\n- ARCHITECTURAL DESIGN DOCUMENT!!!!!!!!!\n+ Icons\n- ...and tidying up :D\nHave Fun <3");
     warning->SetColor(1.0f, 0.0f, 0.05f, 1.0f);
     warning->SetPosition(800, 10);
-    //m_Components.push_back(warning);
+    m_Components.push_back(warning);
 
     sprite = new Engine::SpriteComponent(m_Graphics.get());
     sprite->SetPosition(800, 200);
     sprite->SetColor(0, 1, 0, 1);
     sprite->SetRect(0, 0, 200, 200);
-    //m_Components.push_back(sprite);
+    m_Components.push_back(sprite);
 
 
     cameraMatrices = new Engine::TextComponent(m_Graphics.get());
     cameraMatrices->SetColor(0.3f, 0.3f, 0.5f, 1.0f);
     cameraMatrices->SetPosition(700, 500);
-    //m_Components.push_back(cameraMatrices);
+    m_Components.push_back(cameraMatrices);
        
 
     model = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
@@ -60,6 +61,8 @@ void Game::Init()
     model->SetScale(2, 10, 4);
     m_Components.push_back(model);
 
+    model2 = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
+    m_Components.push_back(model2);
     m_Camera->SetPosition(0, 0, 5);
     
 }
