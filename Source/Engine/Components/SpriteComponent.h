@@ -69,6 +69,7 @@ inline Engine::SpriteComponent::SpriteComponent(D3D11_Graphics* gfx) :
     m_Graphics = gfx;
 
     SetPosition(0, 0);
+    //TODO: Load from a Resource file instead
     SetSprite(L"..\\..\\Resources\\Textures\\DefaultTexture.dds");
 
     SetRect(0, 0, m_SpriteWidth, m_SpriteHeight);

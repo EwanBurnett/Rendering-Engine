@@ -56,6 +56,7 @@ namespace Engine {
 inline Engine::TextComponent::TextComponent(D3D11_Graphics* gfx) :
     m_SpriteBatch(nullptr), m_SpriteFont(nullptr)
 {
+    //TODO: Load from a Resource file instead
     m_Font = L"..\\..\\Resources\\Fonts\\Arial_14_Regular.spritefont";
     m_TextColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 

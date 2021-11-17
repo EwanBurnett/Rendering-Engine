@@ -23,6 +23,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     ID3D10Blob* errorMessages = nullptr;
 
     //TODO: Rewrite effects for D3D11, and add to Effects directory
+    //TODO: Load from a Resource file instead
     HRESULT hr = D3DCompileFromFile(L"..\\..\\Resources\\Effects\\BasicEffect.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
     //D3DCompileFromFile(L"S", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
     if (FAILED(hr))
