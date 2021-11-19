@@ -23,9 +23,11 @@
     <ClCompile Include="Backend\GameObject.cpp" />
     <ClCompile Include="Backend\Graphics.cpp" />
     <ClCompile Include="Backend\ObjectPool.cpp" />
+    <ClCompile Include="Components\AnimatedSpriteComponent.cpp" />
     <ClCompile Include="Components\Camera.cpp" />
     <ClCompile Include="Components\GameComponent.cpp" />
     <ClCompile Include="Components\ModelComponent.cpp" />
+    <ClCompile Include="Utils\Animator.cpp" />
     <ClCompile Include="Utils\Input.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +35,7 @@
     <ClInclude Include="Backend\GameObject.h" />
     <ClInclude Include="Backend\Graphics.h" />
     <ClInclude Include="Backend\ObjectPool.h" />
+    <ClInclude Include="Components\AnimatedSpriteComponent.h" />
     <ClInclude Include="Components\Camera.h" />
     <ClInclude Include="Components\FPSComponent.h" />
     <ClInclude Include="Components\GameComponent.h" />
@@ -40,7 +43,10 @@
     <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TextComponent.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Utils\Animator.h" />
     <ClInclude Include="Utils\Input.h" />
+    <ClInclude Include="Utils\Mesh.h" />
+    <ClInclude Include="Utils\Model.h" />
     <ClInclude Include="Utils\Random.h" />
     <ClInclude Include="Utils\RenderStateHelper.h" />
     <ClInclude Include="Utils\RTTI.h" />
@@ -62,6 +68,7 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -139,7 +146,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)\External\FX11\inc;$(SolutionDir)\External\DXTK\inc;$(SolutionDir)\External\ASSIMP\include;$(SolutionDir)\External\ReactPhysics3D\include;$(SolutionDir)\External\FMOD\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)\External\FX11\inc;$(SolutionDir)\External\DXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
@@ -154,18 +161,13 @@ copy "$(TargetPath)" "$(SolutionDir)lib\"
 copy "$(TargetDir)Engine.pdb" "$(SolutionDir)lib\"
 copy "$(TargetDir)Intermediates\Engine.res" "$(SolutionDir)lib\"
 </Command>
-      <Message>Copying Engine files to /lib/ </Message>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>"$(SolutionDir)External\DXTK\MakeSpriteFont.exe" Arial "..\..\Resources\Fonts\Arial_14_Regular.spritefont" /fontsize:14</Command>
-      <Message>Building Sprite Fonts</Message>
     </PreBuildEvent>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
-    <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\External\ASSIMP\lib;$(SolutionDir)\External\ReactPhysics3D\lib;$(SolutionDir)\External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -177,7 +179,7 @@ copy "$(TargetDir)Intermediates\Engine.res" "$(SolutionDir)lib\"
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)\External\FX11\inc;$(SolutionDir)\External\DXTK\inc;$(SolutionDir)\External\ASSIMP\include;$(SolutionDir)\External\ReactPhysics3D\include;$(SolutionDir)\External\FMOD\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)\External\FX11\inc;$(SolutionDir)\External\DXTK\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
@@ -193,15 +195,10 @@ copy "$(TargetPath)" "$(SolutionDir)lib\"
 copy "$(TargetDir)Engine.pdb" "$(SolutionDir)lib\"
 copy "$(TargetDir)Intermediates\Engine.res" "$(SolutionDir)lib\"
 </Command>
-      <Message>Copying Engine files to /lib/ </Message>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>"$(SolutionDir)External\DXTK\MakeSpriteFont.exe" Arial "..\..\Resources\Fonts\Arial_14_Regular.spritefont" /fontsize:14</Command>
-      <Message>Building Sprite Fonts</Message>
     </PreBuildEvent>
-    <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\External\ASSIMP\lib;$(SolutionDir)\External\ReactPhysics3D\lib;$(SolutionDir)\External\FMOD\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

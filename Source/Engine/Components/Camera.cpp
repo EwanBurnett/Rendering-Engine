@@ -181,6 +181,21 @@ DirectX::XMFLOAT3& Engine::Camera::Direction()
     return (m_Direction);
 }
 
+void Engine::Camera::SetTarget(float x, float y, float z)
+{
+    m_TargetPos = { x, y, z };
+}
+
+void Engine::Camera::SetTarget(DirectX::FXMVECTOR target)
+{
+    XMStoreFloat3(&m_TargetPos, target);
+}
+
+DirectX::XMFLOAT3& Engine::Camera::Target()
+{
+    return (m_TargetPos);
+}
+
 void Engine::Camera::SetRollPitchYaw(float roll, float pitch, float yaw)
 {
     m_Roll = roll;

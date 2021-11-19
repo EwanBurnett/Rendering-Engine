@@ -39,6 +39,12 @@
     <ClCompile Include="Utils\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Utils\Animator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\AnimatedSpriteComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Backend\Demo.h">
@@ -89,6 +95,18 @@
     <ClInclude Include="Utils\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Animator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\AnimatedSpriteComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -102,5 +120,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Resources\Effects\BasicEffect.fx" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

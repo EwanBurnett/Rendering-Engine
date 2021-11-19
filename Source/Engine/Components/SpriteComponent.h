@@ -27,9 +27,12 @@ namespace Engine {
 
         void SetSprite(std::wstring text);
         void SetColor(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
+        void SetRect(RECT rect);
         void SetRect(int left, int top, int width, int height);
         void SetLayerDepth(float depth);
+        void SetOrigin(float x, float y);
         void SetScale(float scale);
+        void SetEffect(SpriteEffects effect = SpriteEffects::SpriteEffects_None);
 
         void Init() override;
         void Update(float dt) override;
@@ -57,22 +60,17 @@ namespace Engine {
 }
 
 inline Engine::SpriteComponent::SpriteComponent(D3D11_Graphics* gfx) :
-    m_SpriteBatch(nullptr)
+    m_SpriteBatch(nullptr), m_SpriteColor ( { 1.0f, 1.0f, 1.0f, 0.2f }),
+    m_SpriteEffect (SpriteEffects_None),
+    m_SpriteDepth (0.0f),
+    m_SpriteOrigin (XMFLOAT2(0, 0)),
+    m_SpriteScale (1.0f),
+    m_SpritePos({ 0, 0 }),
+    m_Graphics (gfx)
 {
-    
-    m_SpriteColor = { 1.0f, 1.0f, 1.0f, 0.2f };
-    m_SpriteEffect = SpriteEffects_None;
-    m_SpriteDepth = 0.0f;
-    m_SpriteOrigin = XMFLOAT2(0, 0);
-    m_SpriteScale = 1.0f;
-    
-    m_Graphics = gfx;
-
-    SetPosition(0, 0);
     //TODO: Load from a Resource file instead
+    //Load the default sprite
     SetSprite(L"..\\..\\Resources\\Textures\\DefaultTexture.dds");
-
-    SetRect(0, 0, m_SpriteWidth, m_SpriteHeight);
 }
 
 
@@ -100,6 +98,7 @@ inline void Engine::SpriteComponent::SetSprite(std::wstring filePath)
     //TODO: Hook in Resource Manager
     //Load the texture from file
     HRESULT hr = CreateDDSTextureFromFile(m_Graphics->Device(), m_SpritePath.c_str(), nullptr, &m_Resource);
+    //TODO: Replace with Debug layer
     if (FAILED(hr)) {
         OutputDebugString(L"Unable to load texture");
     }
@@ -117,6 +116,9 @@ inline void Engine::SpriteComponent::SetSprite(std::wstring filePath)
 
     m_SpriteWidth = d.Width;
     m_SpriteHeight = d.Height;
+
+    //Set the new sprite's rect
+    SetRect(0, 0, m_SpriteWidth, m_SpriteHeight);
 }
 
 inline void Engine::SpriteComponent::SetColor(float r, float g, float b, float a)
@@ -124,9 +126,34 @@ inline void Engine::SpriteComponent::SetColor(float r, float g, float b, float a
     m_SpriteColor = { r, g, b, a };
 }
 
+inline void Engine::SpriteComponent::SetRect(RECT rect)
+{
+    m_SpriteRect = rect;
+}
+
 inline void Engine::SpriteComponent::SetRect(int left, int top, int width, int height)
 {
     m_SpriteRect = { left, top, width, height };
+}
+
+inline void Engine::SpriteComponent::SetLayerDepth(float depth)
+{
+    m_SpriteDepth = depth;
+}
+
+inline void Engine::SpriteComponent::SetOrigin(float x, float y)
+{
+    m_SpriteOrigin = { x, y };
+}
+
+inline void Engine::SpriteComponent::SetScale(float scale)
+{
+    m_SpriteScale = scale;
+}
+
+inline void Engine::SpriteComponent::SetEffect(SpriteEffects effect)
+{
+    m_SpriteEffect = effect;
 }
 
 inline void Engine::SpriteComponent::Init()

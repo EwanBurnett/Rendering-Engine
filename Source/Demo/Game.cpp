@@ -2,8 +2,10 @@
 #include <Components/FPSComponent.h>
 #include <Components/TextComponent.h>
 #include <Components/SpriteComponent.h>
+#include <Components/AnimatedSpriteComponent.h>
 #include <Components/ModelComponent.h>
 #include <iostream>
+#include <Utils/Animator.h>
 
 Engine::TextComponent*      textComponent;
 Engine::TextComponent*      keyboardView;
@@ -11,6 +13,7 @@ Engine::FPSComponent*       fpsComponent;
 Engine::TextComponent*      cameraMatrices;
 Engine::TextComponent*      warning;
 Engine::SpriteComponent*    sprite;
+Engine::AnimatedSpriteComponent* sprite2;
 Engine::ModelComponent*     model;
 Engine::ModelComponent*     model2;
 
@@ -20,6 +23,8 @@ int frameLimitSwitch = 0;
 //Init is called when the application is started.
 void Game::Init()
 {
+    
+
     textComponent = new Engine::TextComponent(m_Graphics.get());
     textComponent->SetPosition(10, 10);
     textComponent->SetText("Default Rendering Demo\nEwan Burnett [2021]\nA simple demo, demonstrating rendered text.\nFramerate Controls:\n    F1 - uncapped\n    F2 - 15 FPS\n    F3 - 30 FPS\n    F4 - 60 FPS");
@@ -67,6 +72,18 @@ void Game::Init()
     m_Components.push_back(model2);
     m_Camera->SetPosition(0, 0, 5);
     
+    sprite2 = new Engine::AnimatedSpriteComponent(m_Graphics.get());
+    sprite2->SetLayerDepth(1);
+    sprite2->SetSprite(L"..\\..\\Resources\\Textures\\walker1.dds");
+    sprite2->SetPosition(500, 500);
+    sprite2->SetScale(2);
+    sprite2->AddClip("Walking_Up", { 64, 64, 1024, 512 }, 0.1f, 0, 16);
+    sprite2->AddClip("Walking_Right", { 64, 64, 1024, 512 }, 0.1f, 16, 16);
+    sprite2->AddClip("Walking_Down", { 64, 64, 1024, 512 }, 0.1f, 64, 16);
+    sprite2->AddClip("Walking_Left", { 64, 64, 1024, 512 }, 0.1f, 96, 16);
+    sprite2->AddClip("Idle", { 64, 64, 1024, 512 }, 0.6f, 48, 32);
+
+    m_Components.push_back(sprite2);
 }
 
 //Update is called once per frame. 
@@ -95,19 +112,22 @@ void Game::Update(float dt)
 
 
     if (m_Keyboard->KeyPressed(KB_FNC_F1)) {
-        SetFrameRate(0);
+        SetFrameRate(24);
     }
     if (m_Keyboard->KeyPressed(KB_FNC_F2)) {
-        SetFrameRate(15);
+        SetFrameRate(5);
     }
     if (m_Keyboard->KeyPressed(KB_FNC_F3)) {
-        SetFrameRate(30);
+        SetFrameRate(15);
     }
     if (m_Keyboard->KeyPressed(KB_FNC_F4)) {
-        SetFrameRate(60);
+        SetFrameRate(30);
     }
 
-    float speed = 15.0f;
+    float speed = 45.0f;
+
+    m_Camera->SetTarget(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);
+    m_Camera->SetPosition(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);
     //Cam
     if (m_Keyboard->KeyDown(KB_KEY_I)) {
         m_Camera->Position().y += speed * dt;
@@ -242,16 +262,25 @@ void Game::FixedUpdate(float dt)
 {
     float speed = 150.0f;
     if (m_Keyboard->KeyDown(KB_DIR_UP)) {
-        sprite->SpritePosition().y -= speed * dt;
+        sprite2->SpritePosition().y -= speed * dt;
+        sprite2->SetClip("Walking_Up");
     }
     if (m_Keyboard->KeyDown(KB_DIR_DOWN)) {
-        sprite->SpritePosition().y += speed * dt;
+        sprite2->SpritePosition().y += speed * dt;
+        sprite2->SetClip("Walking_Down");
     }
     if (m_Keyboard->KeyDown(KB_DIR_LEFT)) {
-        sprite->SpritePosition().x -= speed * dt;
+        sprite2->SpritePosition().x -= speed * dt;
+        //sprite2->SetClip("NULL");
+        sprite2->SetClip("Walking_Left");
     }
     if (m_Keyboard->KeyDown(KB_DIR_RIGHT)) {
-        sprite->SpritePosition().x += speed * dt;
+        sprite2->SpritePosition().x += speed * dt;
+        sprite2->SetClip("Walking_Right");
+    }
+    if (m_Keyboard->KeyPressed(KB_KEY_SPACE)) {
+        sprite2->SetPosition(0, 0);
+        sprite2->SetClip("Idle");
     }
 }
 

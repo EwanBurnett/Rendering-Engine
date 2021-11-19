@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Engine::Demo" Collapsed="true">
+    <Position X="13.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>iBQICiACQkMBQsAAAAAhASAIQBLQEAAYYBAGSAAAAQI=</HashCode>
+      <FileName>Backend\Demo.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::GameObject" Collapsed="true">
+    <Position X="15" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAAAAAACAAggAAEAAABAAAAACAAAAAAAAGAIIAAAA=</HashCode>
+      <FileName>Backend\GameObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::ObjectPool" Collapsed="true">
+    <Position X="9.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAABAAEEoAABAAAACAAA=</HashCode>
+      <FileName>Backend\ObjectPool.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Camera" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUGAABQTCAKJAiiQKAAABCAIKIAAwgAEACAAIAAAAI=</HashCode>
+      <FileName>Components\Camera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::FPSComponent" Collapsed="true">
+    <Position X="7.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAAAAAAgAAAAAAAAAAACAAAACAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Components\FPSComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::GameComponent" Collapsed="true">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAIAAFAgAAAgAAAAEAAAAAAAAAAAAAAAACAAAAAIA=</HashCode>
+      <FileName>Components\GameComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::ModelComponent" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgAAQAAAABqAAAAEAAAAGAAAACApAAAIACgEQEAE=</HashCode>
+      <FileName>Components\ModelComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::SpriteComponent" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQAABAGAAABgghAAAAAACAEAABAAgQEAJoCA4AAAIA=</HashCode>
+      <FileName>Components\SpriteComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::TextComponent" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQIAIEgIgAAggBABIAEACAAAAAAAgAAEAgCAABgAAA=</HashCode>
+      <FileName>Components\TextComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Keyboard" Collapsed="true">
+    <Position X="9.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAoAEAAAAAEQgAEBAAAAAAAAAAAAAAgAAAAAAFBAEQA=</HashCode>
+      <FileName>Utils\Input.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Mouse" Collapsed="true">
+    <Position X="15" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAMAAAEAAQAAAAAAQABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\Input.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Model" Collapsed="true">
+    <Position X="13.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IUAAAAAAAAAAAAAAAAQAACAACAIAAAAAAAggEAAAAAA=</HashCode>
+      <FileName>Utils\Model.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Mesh" Collapsed="true">
+    <Position X="11.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Utils\Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="D3D11_Graphics" Collapsed="true">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAECAAQAAiACIiAQAAAgBQCEAACAAAIIAAACCEBECAA=</HashCode>
+      <FileName>Backend\Graphics.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Animator" Collapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\Animator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Time" Collapsed="true">
+    <Position X="15" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAwAACAABAAJAAAAAgAAgAAAABUBIAAgAAAQQQA=</HashCode>
+      <FileName>Utils\Time.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DirectX::SpriteBatch" Collapsed="true">
+    <Position X="11.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IIIAAAAAAACAAgAAAAAAIAAAAAAAEAgEQAAkAAAAAAA=</HashCode>
+      <FileName>H:\University\Projects\Year 2\Rendering Engine\External\DXTK\Inc\SpriteBatch.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DirectX::SpriteFont" Collapsed="true">
+    <Position X="13.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IIAAICAEABAAEQAAAQAAAAAAAARAAAAAADAgAAAAAAA=</HashCode>
+      <FileName>H:\University\Projects\Year 2\Rendering Engine\External\DXTK\Inc\SpriteFont.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Vertex" Collapsed="true">
+    <Position X="11.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAABAAAAAAAAIAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Components\ModelComponent.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="RNG" Collapsed="true">
+    <Position X="9.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAEAAAAABAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Utils\Random.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="Engine::byte" Collapsed="true">
+    <Position X="9.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Backend\Graphics.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Engine::Pool" Collapsed="true">
+    <Position X="11.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Backend\ObjectPool.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

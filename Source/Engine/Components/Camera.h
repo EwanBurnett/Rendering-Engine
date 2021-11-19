@@ -39,6 +39,11 @@ namespace Engine {
         void SetDirection(float x = 0, float y = 0, float z = 0);
         void SetDirection(DirectX::FXMVECTOR direction);
         DirectX::XMFLOAT3& Direction();
+        
+
+        void SetTarget(float x = 0, float y = 0, float z = 0);
+        void SetTarget(DirectX::FXMVECTOR target);
+        DirectX::XMFLOAT3& Target();
 
         void SetRollPitchYaw(float roll = 0, float pitch = 0, float yaw = 0);
         void SetSpeed(float speed);
