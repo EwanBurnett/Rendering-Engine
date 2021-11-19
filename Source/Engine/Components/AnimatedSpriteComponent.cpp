@@ -9,10 +9,10 @@ Engine::AnimatedSpriteComponent::AnimatedSpriteComponent(D3D11_Graphics* gfx) : 
     m_CurrentAnim = nullptr;
 }
 
-void Engine::AnimatedSpriteComponent::AddClip(std::string name, RECT bounds, float frameTime, int startFrame, int numFrames)
+void Engine::AnimatedSpriteComponent::AddClip(std::string name, RECT bounds, float frameTime, int startFrame, int numFrames, bool isLooping)
 {
     //Create an animation with the parameters
-    Animation2D* animCache = new Animation2D(name, bounds, frameTime);
+    Animation2D* animCache = new Animation2D(name, bounds, frameTime, isLooping);
     animCache->AddFrames(startFrame, numFrames);
 
     //Add the animation clip to the sprites animations.
@@ -40,14 +40,13 @@ void Engine::AnimatedSpriteComponent::SetClip(std::string clipName)
 
 void Engine::AnimatedSpriteComponent::Update(float dt)
 {
-    static float acc;
-    acc += dt;
+    m_Accumulator += dt;
 
     //If the accumulated time is greater than the animation's frame time, Attempt to advance the current animation
     if (m_CurrentAnim != nullptr) {
-        if (acc >= m_CurrentAnim->m_Duration) {
+        if (m_Accumulator >= m_CurrentAnim->m_Duration) {
             SetRect(m_CurrentAnim->Advance());
-            acc = 0;
+            m_Accumulator = 0;
         }
     }
     

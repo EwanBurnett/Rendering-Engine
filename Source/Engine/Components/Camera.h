@@ -25,6 +25,7 @@ namespace Engine {
 
         void Reset();   //Resets the camera to its default position and orientation.
         void ComputeViewProj(DirectX::FXMVECTOR position, DirectX::FXMVECTOR direction);
+        void ComputeViewProj2D(DirectX::FXMVECTOR position, DirectX::FXMVECTOR direction);
 
         DirectX::XMMATRIX GetViewMatrix(); //Returns the View matrix.
         DirectX::XMMATRIX GetProjectionMatrix(); //Returns the Projection matrix.
@@ -82,6 +83,10 @@ namespace Engine {
         float m_Radius; 
         float m_Phi;    //Orbital camera pitch (Y axis)
         float m_Theta;  //Orbital camera roll (X axis)
+
+        //Screen parameters
+        RECT m_ScreenSize;
+        RECT m_ScreenOffset;
 
     private:
         void Orbit();

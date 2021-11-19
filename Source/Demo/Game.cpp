@@ -14,8 +14,10 @@ Engine::TextComponent*      cameraMatrices;
 Engine::TextComponent*      warning;
 Engine::SpriteComponent*    sprite;
 Engine::AnimatedSpriteComponent* sprite2;
+Engine::AnimatedSpriteComponent* sprite3[10];
 Engine::ModelComponent*     model;
 Engine::ModelComponent*     model2;
+Engine::ModelComponent* model3[10];
 
 DirectX::XMFLOAT4X4 viewproj;
 int frameLimitSwitch = 0;
@@ -71,6 +73,9 @@ void Game::Init()
     model2 = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
     m_Components.push_back(model2);
     m_Camera->SetPosition(0, 0, 5);
+
+    
+    
     
     sprite2 = new Engine::AnimatedSpriteComponent(m_Graphics.get());
     sprite2->SetLayerDepth(1);
@@ -81,9 +86,30 @@ void Game::Init()
     sprite2->AddClip("Walking_Right", { 64, 64, 1024, 512 }, 0.1f, 16, 16);
     sprite2->AddClip("Walking_Down", { 64, 64, 1024, 512 }, 0.1f, 64, 16);
     sprite2->AddClip("Walking_Left", { 64, 64, 1024, 512 }, 0.1f, 96, 16);
-    sprite2->AddClip("Idle", { 64, 64, 1024, 512 }, 0.6f, 48, 32);
+    sprite2->AddClip("Idle", { 64, 64, 1024, 512 }, 1.0f / 24.0f, 0, 256, true);
 
     m_Components.push_back(sprite2);
+
+    for (int i = 0; i < std::size(sprite3); i < i++) {
+        sprite3[i] = new Engine::AnimatedSpriteComponent(m_Graphics.get());
+        sprite3[i]->SetLayerDepth(1);
+        sprite3[i]->SetSprite(L"..\\..\\Resources\\Textures\\Fire.dds");
+        sprite3[i]->SetPosition(64 * i * cos(i), 128 * (sin(i)));
+        sprite3[i]->SetScale(i % 8);
+        sprite3[i]->AddClip("Idle", { 64, 64, 640, 384 }, 1.0f / 24.0f, 0, 60, true);
+        sprite3[i]->SetClip("Idle");
+        m_Components.push_back(sprite3[i]);
+
+        for (int i = 0; i < std::size(model3); i++) {
+            model3[i] = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
+            model3[i]->SetTranslation(tan(i) * i, cos(i) * i, sin(i) * i);
+            model3[i]->SetRotation(360 * sin(i), 360 * cos(i), 360 * tan(i));
+            model3[i]->SetScale(i % 15);
+            m_Components.push_back(model3[i]);
+
+        }
+    }
+    
 }
 
 //Update is called once per frame. 
@@ -112,22 +138,22 @@ void Game::Update(float dt)
 
 
     if (m_Keyboard->KeyPressed(KB_FNC_F1)) {
-        SetFrameRate(24);
+        SetFrameRate(0);
     }
     if (m_Keyboard->KeyPressed(KB_FNC_F2)) {
-        SetFrameRate(5);
-    }
-    if (m_Keyboard->KeyPressed(KB_FNC_F3)) {
         SetFrameRate(15);
     }
-    if (m_Keyboard->KeyPressed(KB_FNC_F4)) {
+    if (m_Keyboard->KeyPressed(KB_FNC_F3)) {
         SetFrameRate(30);
+    }
+    if (m_Keyboard->KeyPressed(KB_FNC_F4)) {
+        SetFrameRate(60);
     }
 
     float speed = 45.0f;
 
-    m_Camera->SetTarget(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);
-    m_Camera->SetPosition(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);
+    /*m_Camera->SetTarget(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);
+    m_Camera->SetPosition(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);*/
     //Cam
     if (m_Keyboard->KeyDown(KB_KEY_I)) {
         m_Camera->Position().y += speed * dt;
@@ -279,7 +305,7 @@ void Game::FixedUpdate(float dt)
         sprite2->SetClip("Walking_Right");
     }
     if (m_Keyboard->KeyPressed(KB_KEY_SPACE)) {
-        sprite2->SetPosition(0, 0);
+        //sprite2->SetPosition(0, 0);
         sprite2->SetClip("Idle");
     }
 }

@@ -8,7 +8,7 @@ namespace Engine {
     public:
         AnimatedSpriteComponent(D3D11_Graphics* gfx);
 
-        void AddClip(std::string name, RECT bounds, float frameTime, int startFrame = 0, int numFrames = 1);
+        void AddClip(std::string name, RECT bounds, float frameTime, int startFrame = 0, int numFrames = 1, bool isLooping = true);
 
         void SetClip(std::string clipName);
         //Plays the requested animation clip, from frame 0.
@@ -21,7 +21,7 @@ namespace Engine {
     private:
         Animation2D* m_CurrentAnim;
         Animator2D m_Animator;
-
+        float m_Accumulator;
         std::map<std::string, Animation2D*> m_AnimationClips;
     };
 } 

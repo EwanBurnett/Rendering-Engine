@@ -10,7 +10,7 @@
 #include <sstream>
 #include <DDSTextureLoader.h>
 
-
+//TODO: Load sprites onto 3D Quads, and convert this into a "TextureComponent"
 namespace DirectX {
     class SpriteBatch;
     class SpriteFont;

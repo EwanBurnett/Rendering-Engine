@@ -111,7 +111,7 @@ void Engine::Camera::Reset()
     m_Yaw = 0.0f;
     m_Speed = 5.0f;
 
-    SetCameraView(90.0f, 16.0f / 9.0f, 0.1f, 50.0f);
+    SetCameraView(90.0f, 16.0f / 9.0f, 0.1f, 5000.0f);
     SetOrbitalAxis(10.0f, 0.0f, 0.0f);
 }
 
@@ -127,6 +127,11 @@ void Engine::Camera::ComputeViewProj(FXMVECTOR position, FXMVECTOR direction)
 
     //Work out the Projection Matrix 
     XMStoreFloat4x4(&m_ProjMatrix, XMMatrixPerspectiveFovLH(XMConvertToRadians(m_FoV), m_AspectRatio, m_NearPlane, m_FarPlane));
+}
+
+void Engine::Camera::ComputeViewProj2D(DirectX::FXMVECTOR position, DirectX::FXMVECTOR direction)
+{
+   XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicOffCenterLH(m_ScreenSize.left + m_ScreenOffset.left, m_ScreenSize.right + m_ScreenOffset.right, m_ScreenSize.bottom + m_ScreenOffset.bottom, m_ScreenSize.top + m_ScreenOffset.top, m_NearPlane, m_FarPlane));
 }
 
 DirectX::XMMATRIX Engine::Camera::GetViewMatrix()

@@ -5,6 +5,7 @@
 
 D3D11_Graphics* D3D11_Graphics::m_Instance = nullptr;
 
+
 D3D11_Graphics::D3D11_Graphics(HWND &hWnd, UINT width, UINT height)
 {
     assert(m_Instance == nullptr);
