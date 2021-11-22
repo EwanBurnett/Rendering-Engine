@@ -39,11 +39,11 @@ public:
     void SetFramerate(int fps);
 
     //Returns the ID3D11 Device Context
-    ID3D11DeviceContext* Context();
+    ComPtr<ID3D11DeviceContext> Context();
     //Returns the ID3D11 Device
-    ID3D11Device* Device();
+    ComPtr<ID3D11Device> Device();
     //Returns the IDXGI SwapChain
-    IDXGISwapChain* Swapchain();
+    ComPtr<IDXGISwapChain> Swapchain();
 
 private:
     HRESULT CreateSwapChain();

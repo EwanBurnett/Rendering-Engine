@@ -43,9 +43,9 @@ namespace Engine {
               
         D3D11_Graphics* m_Graphics;
 
-        ID3D11RasterizerState* prevRastState;
-        ID3D11BlendState* prevBlendState;
-        ID3D11DepthStencilState* prevDSState;
+        ComPtr<ID3D11RasterizerState> m_prevRastState;
+        ComPtr<ID3D11BlendState> m_prevBlendState;
+        ComPtr<ID3D11DepthStencilState> m_prevDSState;
 
         FLOAT* blendFactor = new FLOAT[4];
         UINT sampleMask;
@@ -56,7 +56,7 @@ namespace Engine {
 inline Engine::TextComponent::TextComponent(D3D11_Graphics* gfx) :
     m_SpriteBatch(nullptr), m_SpriteFont(nullptr)
 {
-    //TODO: Load from a Resource file instead
+    //TODO: Load default font from a Resource file instead
     m_Font = L"..\\..\\Resources\\Fonts\\Arial_14_Regular.spritefont";
     m_TextColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -72,7 +72,7 @@ inline Engine::TextComponent::~TextComponent()
     delete(m_SpriteFont);
 
     delete(blendFactor);
-    if (prevRastState != nullptr) {
+    /*if (prevRastState != nullptr) {
         prevRastState->Release();
     }
     if (prevBlendState != nullptr) {
@@ -80,7 +80,7 @@ inline Engine::TextComponent::~TextComponent()
     }
     if (prevDSState != nullptr) {
         prevDSState->Release();
-    }
+    }*/
 }
 
 inline void Engine::TextComponent::SetPosition(float x, float y)
@@ -106,8 +106,8 @@ inline void Engine::TextComponent::SetColor(float r, float g, float b, float a)
 
 inline void Engine::TextComponent::Init()
 {
-    m_SpriteBatch = new SpriteBatch(m_Graphics->Context());
-    m_SpriteFont = new SpriteFont(m_Graphics->Device(), m_Font.c_str());
+    m_SpriteBatch = new SpriteBatch(m_Graphics->Context().Get());
+    m_SpriteFont = new SpriteFont(m_Graphics->Device().Get(), m_Font.c_str());
 }
 
 inline void Engine::TextComponent::Update(float dt)
@@ -118,21 +118,10 @@ inline void Engine::TextComponent::Update(float dt)
 
 inline void Engine::TextComponent::Draw(float dt)
 {
-    //TODO: Fix Render State caching, so we can draw text and 3d geometry properly
     //Spritebatch messes with our render states, so cache the current ones before drawing, and restore them after
-    if (prevRastState != nullptr) {
-        prevRastState->Release();
-    }
-    if (prevBlendState != nullptr) {
-        prevBlendState->Release();
-    }
-    if (prevDSState != nullptr) {
-        prevDSState->Release();
-    }
-
-    m_Graphics->Context()->RSGetState(&prevRastState);
-    m_Graphics->Context()->OMGetBlendState(&prevBlendState, blendFactor, &sampleMask);
-    m_Graphics->Context()->OMGetDepthStencilState(&prevDSState, &stencilRef);
+    m_Graphics->Context()->RSGetState(&m_prevRastState);
+    m_Graphics->Context()->OMGetBlendState(&m_prevBlendState, blendFactor, &sampleMask);
+    m_Graphics->Context()->OMGetDepthStencilState(&m_prevDSState, &stencilRef);
 
     m_SpriteBatch->Begin();
 
@@ -140,17 +129,8 @@ inline void Engine::TextComponent::Draw(float dt)
 
     m_SpriteBatch->End();
     
-    m_Graphics->Context()->OMSetDepthStencilState(prevDSState, stencilRef);
-    m_Graphics->Context()->OMSetBlendState(prevBlendState, blendFactor, sampleMask);
-    m_Graphics->Context()->RSSetState(prevRastState);
-
-    
-    /*m_Graphics->Context()->OMSetDepthStencilState(nullptr, UINT_MAX);
-    m_Graphics->Context()->OMSetBlendState(nullptr, nullptr, UINT_MAX);
-    m_Graphics->Context()->RSSetState(nullptr);*/
-
-    /*prevDSState->Release();
-    prevBlendState->Release();
-    prevRastState->Release();*/
+    m_Graphics->Context()->OMSetDepthStencilState(m_prevDSState.Get(), stencilRef);
+    m_Graphics->Context()->OMSetBlendState(m_prevBlendState.Get(), blendFactor, sampleMask);
+    m_Graphics->Context()->RSSetState(m_prevRastState.Get());
 
 }

@@ -1,9 +1,6 @@
 #include "Animator.h"
 
-Animator2D::Animator2D()
-{
-    
-}
+
 
 //void Animator2D::Play(std::string animation)
 //{

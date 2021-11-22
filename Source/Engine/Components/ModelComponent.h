@@ -34,24 +34,26 @@ namespace Engine {
         void SetScale(float x = 1.0f, float y = 1.0f, float z = 1.0f);
         void SetRotation(float x = 0.0f, float y = 0.0f, float z = 0.0f);
         void SetTranslation(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+        void SetOrigin(float x = 0.0f, float y = 0.0f, float z = 0.0f);
 
     protected:
         XMFLOAT3 m_Scale;
         XMFLOAT3 m_Rotation;
         XMFLOAT3 m_Translation;
+        XMFLOAT3 m_Origin;
 
     private:
-        ID3D11Device* m_pDevice;
-        ID3D11DeviceContext* m_pContext;
+        ComPtr<ID3D11Device> m_pDevice;
+        ComPtr<ID3D11DeviceContext> m_pContext;
 
-        ID3DX11Effect* m_Effect;
-        ID3DX11EffectTechnique* m_Technique;
-        ID3DX11EffectPass* m_Pass;
-        ID3DX11EffectMatrixVariable* m_WVPVar;
-
-        ID3D11InputLayout* m_InputLayout;
-        ID3D11Buffer* m_VertexBuffer;
-        ID3D11Buffer* m_IndexBuffer;
+        ComPtr<ID3DX11Effect> m_Effect;
+        ComPtr<ID3DX11EffectTechnique> m_Technique;
+        ComPtr<ID3DX11EffectPass> m_Pass;
+        ComPtr<ID3DX11EffectMatrixVariable> m_WVPVar;
+        
+        ComPtr<ID3D11InputLayout> m_InputLayout;
+        ComPtr<ID3D11Buffer> m_VertexBuffer;
+        ComPtr<ID3D11Buffer> m_IndexBuffer;
 
         Camera* m_Camera;
         DirectX::XMFLOAT4X4 m_WorldMatrix;

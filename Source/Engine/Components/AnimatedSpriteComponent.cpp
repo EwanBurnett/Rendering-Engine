@@ -1,12 +1,12 @@
 #include "AnimatedSpriteComponent.h"
 
-Engine::AnimatedSpriteComponent::AnimatedSpriteComponent(D3D11_Graphics* gfx) : Engine::SpriteComponent(gfx)
+Engine::AnimatedSpriteComponent::AnimatedSpriteComponent(D3D11_Graphics* gfx) : Engine::SpriteComponent(gfx), m_Accumulator(0.0f), m_CurrentAnim(nullptr)
 {
-    
-    /*Animation2D* debugAnim = new Animation2D("Hello", { 64, 64, 1024, 64 }, 1.0f / 10.0f);
-    debugAnim->AddFrames(15, 16);
-    m_CurrentAnim = debugAnim;*/
-    m_CurrentAnim = nullptr;
+}
+
+Engine::AnimatedSpriteComponent::~AnimatedSpriteComponent()
+{
+    delete(m_CurrentAnim);
 }
 
 void Engine::AnimatedSpriteComponent::AddClip(std::string name, RECT bounds, float frameTime, int startFrame, int numFrames, bool isLooping)

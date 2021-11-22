@@ -113,7 +113,7 @@ struct Animation2D {
 class Animator2D {
 
 public:
-    Animator2D();
+    Animator2D() {};
 
     void SetClip(std::string clipName);
     void Update(float dt);

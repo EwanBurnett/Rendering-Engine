@@ -7,6 +7,7 @@ namespace Engine {
     class AnimatedSpriteComponent : public SpriteComponent {
     public:
         AnimatedSpriteComponent(D3D11_Graphics* gfx);
+        ~AnimatedSpriteComponent(); 
 
         void AddClip(std::string name, RECT bounds, float frameTime, int startFrame = 0, int numFrames = 1, bool isLooping = true);
 

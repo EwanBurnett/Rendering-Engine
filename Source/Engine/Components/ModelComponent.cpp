@@ -39,7 +39,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
         //TODO: Do some error handling
     }
 
-    hr = D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(), 0, m_pDevice, &m_Effect);
+    hr = D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(), 0, m_pDevice.Get(), m_Effect.GetAddressOf());
 
     if (FAILED(hr)) {
         //TODO: Do some error handling
@@ -79,7 +79,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
         {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    hr = m_pDevice->CreateInputLayout(inputElementDescriptions, ARRAYSIZE(inputElementDescriptions), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &m_InputLayout);
+    hr = m_pDevice->CreateInputLayout(inputElementDescriptions, ARRAYSIZE(inputElementDescriptions), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, m_InputLayout.GetAddressOf());
     if (FAILED(hr)) {
         //TODO: Do some error handling
     }
@@ -88,14 +88,14 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     //DEBUG PYRAMID
     Vertex verts[] = {
         //Cube
-        {XMFLOAT3(-0.5, -0.75,	-0.5),		XMFLOAT4(1, 1, 1, 1)},		//White		0
-        {XMFLOAT3(0.5,	-0.75,	-0.5),		XMFLOAT4(1, 1, 0, 1)},		//Yellow	1
-        {XMFLOAT3(0.5,	-0.75,	0.5),		XMFLOAT4(1, 0, 1, 1)},		//Purple	2
-        {XMFLOAT3(-0.5,	-0.75,	0.5),		XMFLOAT4(0, 1, 1, 1)},		//Turquoise	3
-        {XMFLOAT3(-0.5, 0.75,	-0.5),		XMFLOAT4(1, 0, 0, 1)},		//Red		4
-        {XMFLOAT3(0.5,	0.75,	-0.5),		XMFLOAT4(0, 1, 0, 1)},		//Green		5
-        {XMFLOAT3(0.5,	0.75,	0.5),		XMFLOAT4(0, 0, 1, 1)},		//Blue		6
-        {XMFLOAT3(-0.5,	0.75,	0.5),		XMFLOAT4(0, 0, 0, 1)},		//Black		7
+        {XMFLOAT3(-0.5, -0.5,	-0.5),		XMFLOAT4(1, 1, 1, 1)},		//White		0
+        {XMFLOAT3(0.5,	-0.5,	-0.5),		XMFLOAT4(1, 1, 0, 1)},		//Yellow	1
+        {XMFLOAT3(0.5,	-0.5,	0.5),		XMFLOAT4(1, 0, 1, 1)},		//Purple	2
+        {XMFLOAT3(-0.5,	-0.5,	0.5),		XMFLOAT4(0, 1, 1, 1)},		//Turquoise	3
+        {XMFLOAT3(-0.5, 0.5,	-0.5),		XMFLOAT4(1, 0, 0, 1)},		//Red		4
+        {XMFLOAT3(0.5,	0.5,	-0.5),		XMFLOAT4(0, 1, 0, 1)},		//Green		5
+        {XMFLOAT3(0.5,	0.5,	0.5),		XMFLOAT4(0, 0, 1, 1)},		//Blue		6
+        {XMFLOAT3(-0.5,	0.5,	0.5),		XMFLOAT4(0, 0, 0, 1)},		//Black		7
     };
 
     D3D11_BUFFER_DESC vertexBufferDesc;
@@ -108,7 +108,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     ZeroMemory(&vertexSubresourceData, sizeof(vertexSubresourceData));
     vertexSubresourceData.pSysMem = verts;
 
-    hr = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, &m_VertexBuffer);
+    hr = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, m_VertexBuffer.GetAddressOf());
     if (FAILED(hr)) {
         //TODO: Do some error handling
     }
@@ -144,7 +144,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     iInitData.pSysMem = indices;
 
     //Create the index buffer
-    m_pDevice->CreateBuffer(&ibd, &iInitData, &m_IndexBuffer);
+    m_pDevice->CreateBuffer(&ibd, &iInitData, m_IndexBuffer.GetAddressOf());
 
    
 }
@@ -160,8 +160,8 @@ Engine::ModelComponent::~ModelComponent()
     //m_Pass->Release();
     //m_WVPVar->Release();
 
-    m_InputLayout->Release();
-    m_VertexBuffer->Release();
+    //m_InputLayout->Release();
+    //m_VertexBuffer->Release();
 
 }
 
@@ -178,20 +178,20 @@ void Engine::ModelComponent::Update(float dt)
 void Engine::ModelComponent::Draw(float dt)
 {
     m_pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    m_pContext->IASetInputLayout(m_InputLayout);
+    m_pContext->IASetInputLayout(m_InputLayout.Get());
 
     UINT stride = sizeof(Vertex);
     UINT offset = 0;
-    m_pContext->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
+    m_pContext->IASetVertexBuffers(0, 1, m_VertexBuffer.GetAddressOf(), &stride, &offset);
 
-    m_pContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    m_pContext->IASetIndexBuffer(m_IndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
     XMMATRIX world = XMLoadFloat4x4(&m_WorldMatrix);
     XMMATRIX wvp = world * m_Camera->GetViewMatrix() * m_Camera->GetProjectionMatrix();
 
     m_WVPVar->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-    m_Pass->Apply(0, m_pContext);
+    m_Pass->Apply(0, m_pContext.Get());
 
     
     m_pContext->DrawIndexed(36, 0, 0);
@@ -217,5 +217,10 @@ void Engine::ModelComponent::SetRotation(float x, float y, float z)
 
 void Engine::ModelComponent::SetTranslation(float x, float y, float z)
 {
-    XMStoreFloat3(&m_Translation, XMVectorSet(x, y, z, 1));
+    XMStoreFloat3(&m_Translation, XMVectorSet(m_Origin.x + x, m_Origin.y + y, m_Origin.z + z, 1));
+}
+
+void Engine::ModelComponent::SetOrigin(float x, float y, float z)
+{
+    XMStoreFloat3(&m_Origin, XMVectorSet(x, y, z, 1));
 }

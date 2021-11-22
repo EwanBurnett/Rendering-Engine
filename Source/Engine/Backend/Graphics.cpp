@@ -280,19 +280,19 @@ void D3D11_Graphics::SetFramerate(int fps)
     }
 }
 
-ID3D11DeviceContext* D3D11_Graphics::Context()
+ComPtr<ID3D11DeviceContext> D3D11_Graphics::Context()
 {
-    return m_pContext.Get();
+    return m_pContext;
 }
 
-ID3D11Device* D3D11_Graphics::Device()
+ComPtr<ID3D11Device> D3D11_Graphics::Device()
 {
-    return m_pDevice.Get();
+    return m_pDevice;
 }
 
-IDXGISwapChain* D3D11_Graphics::Swapchain()
+ComPtr<IDXGISwapChain> D3D11_Graphics::Swapchain()
 {
-    return m_pSwapChain.Get();
+    return m_pSwapChain;
 }
 
 HRESULT D3D11_Graphics::CreateSwapChain()

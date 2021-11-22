@@ -53,7 +53,7 @@ namespace Engine {
 
     private:
         SpriteBatch* m_SpriteBatch;
-        ID3D11ShaderResourceView* m_Resource;
+        ComPtr<ID3D11ShaderResourceView> m_Resource;
         D3D11_Graphics* m_Graphics;
         
     };
@@ -76,7 +76,7 @@ inline Engine::SpriteComponent::SpriteComponent(D3D11_Graphics* gfx) :
 
 inline Engine::SpriteComponent::~SpriteComponent()
 {
-    m_Resource->Release();
+    //m_Resource->Release();
     delete(m_SpriteBatch);
 }
 
@@ -97,25 +97,25 @@ inline void Engine::SpriteComponent::SetSprite(std::wstring filePath)
 
     //TODO: Hook in Resource Manager
     //Load the texture from file
-    HRESULT hr = CreateDDSTextureFromFile(m_Graphics->Device(), m_SpritePath.c_str(), nullptr, &m_Resource);
+    HRESULT hr = CreateDDSTextureFromFile(m_Graphics->Device().Get(), m_SpritePath.c_str(), nullptr, &m_Resource);
     //TODO: Replace with Debug layer
     if (FAILED(hr)) {
         OutputDebugString(L"Unable to load texture");
     }
     
     //Acquire the width and height of the texture
-    ID3D11Texture2D* t;
-    ID3D11Resource* r;
-    m_Resource->GetResource(&r);
-    r->QueryInterface<ID3D11Texture2D>(&t);
-    D3D11_TEXTURE2D_DESC d;
-    t->GetDesc(&d);
+    ID3D11Texture2D* tex;
+    ID3D11Resource* resource;
+    m_Resource->GetResource(&resource);
+    resource->QueryInterface<ID3D11Texture2D>(&tex);
+    D3D11_TEXTURE2D_DESC texDesc;
+    tex->GetDesc(&texDesc);
     
-    r->Release();
-    t->Release();
+    resource->Release();
+    tex->Release();
 
-    m_SpriteWidth = d.Width;
-    m_SpriteHeight = d.Height;
+    m_SpriteWidth = texDesc.Width;
+    m_SpriteHeight = texDesc.Height;
 
     //Set the new sprite's rect
     SetRect(0, 0, m_SpriteWidth, m_SpriteHeight);
@@ -158,7 +158,7 @@ inline void Engine::SpriteComponent::SetEffect(SpriteEffects effect)
 
 inline void Engine::SpriteComponent::Init()
 {
-    m_SpriteBatch = new SpriteBatch(m_Graphics->Context());
+    m_SpriteBatch = new SpriteBatch(m_Graphics->Context().Get());
 }
 
 inline void Engine::SpriteComponent::Update(float dt)
@@ -171,11 +171,8 @@ inline void Engine::SpriteComponent::Draw(float dt)
 {
     m_SpriteBatch->Begin();
 
-    //TODO: Draw the whole sprite, if size is not specified
-    //m_SpriteBatch->Draw(m_Resource, m_SpritePos, m_SpriteColor);
-
-    //TODO: Else, Draw a subrect of the sprite
-    m_SpriteBatch->Draw(m_Resource, m_SpritePos, &m_SpriteRect, m_SpriteColor, 0.0f, m_SpriteOrigin, m_SpriteScale, m_SpriteEffect, m_SpriteDepth);
+    //Draw the sprite to the screen
+    m_SpriteBatch->Draw(m_Resource.Get(), m_SpritePos, &m_SpriteRect, m_SpriteColor, 0.0f, m_SpriteOrigin, m_SpriteScale, m_SpriteEffect, m_SpriteDepth);
 
     m_SpriteBatch->End();
 
