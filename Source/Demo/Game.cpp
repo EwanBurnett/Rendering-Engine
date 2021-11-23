@@ -17,7 +17,7 @@
 //Engine::AnimatedSpriteComponent*    sprite3[1];
 Engine::ModelComponent*             model;
 //Engine::ModelComponent*             model2;
-//Engine::ModelComponent*             model3[1];
+//Engine::ModelComponent*             model3[50];
 
 DirectX::XMFLOAT4X4 viewproj;
 int frameLimitSwitch = 0;
@@ -56,13 +56,21 @@ void Game::Init()
     //m_Components.push_back(cameraMatrices);
     //   
 
+    
+
    model = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
    model->SetOrigin(0.5, 0.5, 0.5);
    model->SetRotation(30, 30, 45);
    model->SetTranslation(0, 0, -10);
-   model->SetScale(1, 1, 1);
+   model->SetScale(2, 2, 2);
    m_Components.push_back(model);
 
+   //model2 = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
+   //model2->SetOrigin(0.5, 0.5, 0.5);
+   //// model2->SetRotation(30, 30, 45);
+   //model2->SetTranslation(0, 0, -10);
+   //model2->SetScale(1, 1, 1);
+   //m_Components.push_back(model2);
     //sprite = new Engine::SpriteComponent(m_Graphics.get());
     //sprite->SetPosition(800, 200);
     //sprite->SetColor(0, 1, 0, 1);
@@ -100,13 +108,15 @@ void Game::Init()
     //    m_Components.push_back(sprite3[i]);
     //}
 
-        //for (int i = 0; i < std::size(model3); i++) {
-        //    model3[i] = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
-        //    model3[i]->SetTranslation(cos(i) * 100, cos(i) * 100, sin(i) * 100);
-        //    //model3[i]->SetRotation(360 * sin(i), 360 * cos(i), 360 * tan(i));
-        //    //model3[i]->SetScale(i % 15);
-        //    m_Components.push_back(model3[i]);
-        //}
+    /*for (int i = 0; i < std::size(model3); i++) {
+        model3[i] = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
+        model3[i]->SetTranslation(i, i, i);
+        model3[i]->SetTranslation(cos(i) * 100, cos(i) * 100, sin(i) * 100);
+        model3[i]->SetRotation(360 * sin(i), 360 * cos(i), 360 * tan(i));
+        model3[i]->SetScale((i % 10) / 1);
+        m_Components.push_back(model3[i]);
+    }*/
+
     
     //
 }
@@ -114,7 +124,7 @@ void Game::Init()
 //Update is called once per frame. 
 void Game::Update(float dt)
 {
-    static float speed;
+    static float speed = 5;
     if (m_Keyboard->KeyDown(KB_DIR_UP)) {
         speed += 10.0f * dt;
     }
