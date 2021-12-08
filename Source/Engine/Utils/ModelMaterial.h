@@ -1,5 +1,5 @@
 #pragma once
-
+//#define NOMINMAX
 #include <string>
 #include <map>
 #include "Model.h"

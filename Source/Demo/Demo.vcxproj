@@ -92,20 +92,20 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)\External\FX11\inc;$(SolutionDir)\External\DXTK\inc;$(SolutionDir)\Source\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)\External\FX11\inc;$(SolutionDir)\External\DXTK\inc;$(SolutionDir)\Source\Engine;$(SolutionDir)\External\ASSIMP\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CallingConvention>Cdecl</CallingConvention>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Effects11d.lib;DirectXTK-d.lib;d3d11.lib;d3dcompiler.lib;dinput8.lib;dxguid.lib;Engine.lib;Engine.res;assimp-vc142-mtd.lib;%(AdditionalDependencies);fmod_vc.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(WindowsSDK_LibraryPath_x86);$(SolutionDir)\lib;$(SolutionDir)\External\DXTK\lib;$(SolutionDir)\External\FX11\lib;$(SolutionDir)\External\ASSIMP\lib;$(SolutionDir)\External\FMOD\lib;$(SolutionDir)\External\ReactPhysics3D\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Effects11d.lib;DirectXTK-d.lib;d3d11.lib;d3dcompiler.lib;dinput8.lib;dxguid.lib;Engine.lib;Engine.res;assimp-vc140-mt.lib;%(AdditionalDependencies);fmod_vc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(WindowsSDK_LibraryPath_x86);$(SolutionDir)\lib;$(SolutionDir)\External\DXTK\lib;$(SolutionDir)\External\FX11\lib;$(SolutionDir)\External\ASSIMP\lib\Debug\;$(SolutionDir)\External\FMOD\lib;$(SolutionDir)\External\ReactPhysics3D\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(TargetDir)\$(MSBuildProjectName).exe" "$(SolutionDir)\Build\$(Configuration)\
 copy "$(SolutionDir)External\FMOD\lib\fmod.dll" "$(SolutionDir)Build\$(Configuration)\"
-copy "$(SolutionDir)External\ASSIMP\lib\assimp-vc142-mtd.dll" "$(SolutionDir)Build\$(Configuration)\"</Command>
+copy "$(SolutionDir)External\ASSIMP\lib\Debug\assimp-vc140-mt.dll" "$(SolutionDir)Build\$(Configuration)\"</Command>
       <Message>Copying Demo project to output directory</Message>
     </PostBuildEvent>
     <Bscmake>

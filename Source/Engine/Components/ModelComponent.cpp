@@ -84,67 +84,10 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
         //TODO: Do some error handling
     }
 
-    //Create a vertex buffer
-    //DEBUG PYRAMID
-    Vertex verts[] = {
-        //Cube
-        {XMFLOAT3(-0.5, -0.5,	-0.5),		XMFLOAT4(1, 1, 1, 1)},		//White		0
-        {XMFLOAT3(0.5,	-0.5,	-0.5),		XMFLOAT4(1, 1, 0, 1)},		//Yellow	1
-        {XMFLOAT3(0.5,	-0.5,	0.5),		XMFLOAT4(1, 0, 1, 1)},		//Purple	2
-        {XMFLOAT3(-0.5,	-0.5,	0.5),		XMFLOAT4(0, 1, 1, 1)},		//Turquoise	3
-        {XMFLOAT3(-0.5, 0.5,	-0.5),		XMFLOAT4(1, 0, 0, 1)},		//Red		4
-        {XMFLOAT3(0.5,	0.5,	-0.5),		XMFLOAT4(0, 1, 0, 1)},		//Green		5
-        {XMFLOAT3(0.5,	0.5,	0.5),		XMFLOAT4(0, 0, 1, 1)},		//Blue		6
-        {XMFLOAT3(-0.5,	0.5,	0.5),		XMFLOAT4(0, 0, 0, 1)},		//Black		7
-    };
-
-    D3D11_BUFFER_DESC vertexBufferDesc;
-    ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
-    vertexBufferDesc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(verts);
-    vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-    D3D11_SUBRESOURCE_DATA vertexSubresourceData;
-    ZeroMemory(&vertexSubresourceData, sizeof(vertexSubresourceData));
-    vertexSubresourceData.pSysMem = verts;
-
-    hr = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, m_VertexBuffer.GetAddressOf());
-    if (FAILED(hr)) {
-        //TODO: Do some error handling
-    }
-    /*UINT stride = sizeof(Vertex);
-    UINT offset = 0;
-
-    m_pContext->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);*/
-
-    //Index list for our shape
-    UINT indices[] = {
-        0, 1, 2,	0, 2, 3, //Bottom Face
-        0, 4, 5,	0, 5, 1, //Back Face
-        1, 5, 6,	1, 6, 2, //Right Face
-        2, 6, 7,	2, 7, 3, //Front Face
-        3, 7, 4,	3, 4, 0, //Left Face
-        4, 6, 5,	4, 7, 6, //Top Face
-    };
-    
-
-    //mIndexCount = sizeof(indices);
-
-    //Creating an index buffer Description
-    D3D11_BUFFER_DESC ibd;
-    ibd.Usage = D3D11_USAGE_DEFAULT;
-    ibd.ByteWidth = static_cast<UINT>(sizeof(UINT) * std::size(indices));
-    ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    ibd.CPUAccessFlags = 0;
-    ibd.MiscFlags = 0;
-    ibd.StructureByteStride = 0;
-
-    //Initializse the index buffer with our data
-    D3D11_SUBRESOURCE_DATA iInitData;
-    iInitData.pSysMem = indices;
-
-    //Create the index buffer
-    m_pDevice->CreateBuffer(&ibd, &iInitData, m_IndexBuffer.GetAddressOf());
+    std::string a = "D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\amber.fbx";
+    //model = std::make_unique<Engine::Model>(gfx, "Resources\\Models\\Sphere.obj", true);
+    m_Model = std::make_unique<Engine::Model>(gfx, a, true);
+    CreateBuffers();
 
    
 }
@@ -162,6 +105,30 @@ Engine::ModelComponent::~ModelComponent()
 
     //m_InputLayout->Release();
     //m_VertexBuffer->Release();
+
+}
+
+void Engine::ModelComponent::CreateBuffers()
+{
+    Mesh* mesh = m_Model->Meshes().at(0);
+
+    const std::vector<XMFLOAT3>& src = mesh->Vertices();
+    std::vector<Vertex> verts;
+
+    verts.reserve(src.size());
+    
+    if (mesh->VertexColours().size() > 0) {
+        std::vector<XMFLOAT4>* vertClrs = mesh->VertexColours().at(0);
+
+        if (vertClrs->size() == src.size()) {
+            //TODO: Link to debug layer
+        }
+
+
+    }
+
+    m_IndexCount = mesh->Indices().size();
+
 
 }
 
@@ -194,7 +161,7 @@ void Engine::ModelComponent::Draw(float dt)
     m_Pass->Apply(0, m_pContext.Get());
 
     
-    m_pContext->DrawIndexed(36, 0, 0);
+    m_pContext->DrawIndexed(m_IndexCount, 0, 0);
 }
 
 void Engine::ModelComponent::Reset()

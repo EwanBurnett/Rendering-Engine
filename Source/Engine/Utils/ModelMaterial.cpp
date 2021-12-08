@@ -9,6 +9,25 @@ Engine::ModelMaterial::ModelMaterial(Model& model) :
 	InitTextureTypeMappings();
 }
 
+Engine::ModelMaterial::~ModelMaterial()
+{
+}
+
+void Engine::ModelMaterial::InitTextureTypeMappings()
+{
+	if (m_TextureTypeMappings.size() != TextureType::End) {
+		m_TextureTypeMappings[TextureType::Diffuse] = aiTextureType_DIFFUSE;
+		m_TextureTypeMappings[TextureType::SpecularMap] = aiTextureType_SPECULAR;
+		m_TextureTypeMappings[TextureType::Ambient] = aiTextureType_AMBIENT;
+		m_TextureTypeMappings[TextureType::Heightmap] = aiTextureType_HEIGHT;
+		m_TextureTypeMappings[TextureType::Normalmap] = aiTextureType_NORMALS;
+		m_TextureTypeMappings[TextureType::SpecularPowerMap] = aiTextureType_SHININESS;
+		m_TextureTypeMappings[TextureType::DisplacementMap] = aiTextureType_DISPLACEMENT;
+		m_TextureTypeMappings[TextureType::LightMap] = aiTextureType_LIGHTMAP;
+
+	}
+}
+
 Engine::ModelMaterial::ModelMaterial(Model& model, aiMaterial* material) :
 	m_Model(model), m_Textures()
 {

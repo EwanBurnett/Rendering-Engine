@@ -19,8 +19,8 @@ Engine::ModelComponent*             model;
 //Engine::ModelComponent*             model2;
 //Engine::ModelComponent*             model3[50];
 
-DirectX::XMFLOAT4X4 viewproj;
-int frameLimitSwitch = 0;
+//DirectX::XMFLOAT4X4 viewproj;
+//int frameLimitSwitch = 0;
 
 //Init is called when the application is started.
 void Game::Init()
@@ -124,7 +124,7 @@ void Game::Init()
 //Update is called once per frame. 
 void Game::Update(float dt)
 {
-    static float speed = 5;
+    /*static float speed = 5;
     if (m_Keyboard->KeyDown(KB_DIR_UP)) {
         speed += 10.0f * dt;
     }
@@ -133,7 +133,7 @@ void Game::Update(float dt)
     }
     static float rot;
     model->SetRotation(-rot, rot, rot / 2);
-    rot += speed * dt;
+    rot += speed * dt;*/
 
     ////TODO: Format this properly (16 rows, 2 columns, 8 bits per column)
     //std::stringstream out;

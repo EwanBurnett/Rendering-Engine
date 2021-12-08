@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 #include <Windows.h>
 #include <d3d11.h>
+//#include "../include/assimp/scene.h"
 #include <assimp/scene.h>
 #include "Model.h"
 #include "ModelMaterial.h"
@@ -31,7 +32,7 @@ namespace Engine {
         const std::vector<DirectX::XMFLOAT3>& Tangents() const;
         const std::vector<DirectX::XMFLOAT3>& Binormals() const;
         const std::vector<std::vector<DirectX::XMFLOAT3>*>& TexCoords() const;
-        const std::vector<std::vector<DirectX::XMFLOAT3>*>& VertexColours() const;
+        const std::vector<std::vector<DirectX::XMFLOAT4>*>& VertexColours() const;
 
         UINT FaceCount() const;
         const std::vector<UINT>& Indices() const;
@@ -50,7 +51,7 @@ namespace Engine {
         std::vector<DirectX::XMFLOAT3> m_Tangents;
         std::vector<DirectX::XMFLOAT3> m_Binormals;
         std::vector<std::vector<DirectX::XMFLOAT3>*> m_TexCoords;
-        std::vector<std::vector<DirectX::XMFLOAT3>*> m_VertexColours;
+        std::vector<std::vector<DirectX::XMFLOAT4>*> m_VertexColours;
 
         UINT m_FaceCount;
         std::vector<UINT> m_Indices;

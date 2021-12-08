@@ -23,6 +23,8 @@ Engine::Model::Model(D3D11_Graphics* gfx, std::string& fileName, bool bFlipUVs) 
 
     if (scene == nullptr) {
         //TODO: Replace with debug layer
+        OutputDebugStringA("File was unable to be read.");
+        assert(false);
     }
 
     //Add the materials from the scene

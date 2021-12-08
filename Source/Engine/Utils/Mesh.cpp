@@ -89,6 +89,16 @@ Engine::Mesh::~Mesh()
 	}
 }
 
+Engine::Model& Engine::Mesh::GetModel()
+{
+	return(m_Model);
+}
+
+Engine::ModelMaterial& Engine::Mesh::GetMaterial()
+{
+	return(*m_Material);
+}
+
 void Engine::Mesh::CreateIndexBuffer(ID3D11Buffer** ppIndexBuffer)
 {
 	if (ppIndexBuffer == nullptr) {
@@ -114,4 +124,19 @@ void Engine::Mesh::CreateIndexBuffer(ID3D11Buffer** ppIndexBuffer)
 		//TODO: Link to Debug Layer
 	}
 
+}
+
+const std::vector<DirectX::XMFLOAT3>& Engine::Mesh::Vertices() const
+{
+	return(m_Vertices);
+}
+
+const std::vector<std::vector<DirectX::XMFLOAT4>*>& Engine::Mesh::VertexColours() const
+{
+	return(m_VertexColours);
+}
+
+const std::vector<UINT>& Engine::Mesh::Indices() const
+{
+	return(m_Indices);
 }

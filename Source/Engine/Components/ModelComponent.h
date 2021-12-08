@@ -11,6 +11,9 @@
 #include <d3dx11effect.h>
 #include "..\Backend\Graphics.h"
 #include "Camera.h"
+#include "../Utils/Model.h"
+#include <memory>
+
 
 struct Vertex {
     Vertex(DirectX::XMFLOAT3 Position, DirectX::XMFLOAT4 Color) : position(Position), color(Color){}
@@ -26,9 +29,11 @@ namespace Engine {
         ModelComponent(D3D11_Graphics* gfx, Camera* cam);
         ~ModelComponent();
 
+        virtual void CreateBuffers();
+
         void Update(float dt) override;
         void Draw(float dt) override;
-
+            
         void Reset();
 
         void SetScale(float x = 1.0f, float y = 1.0f, float z = 1.0f);
@@ -42,7 +47,10 @@ namespace Engine {
         XMFLOAT3 m_Translation;
         XMFLOAT3 m_Origin;
 
-    private:
+    //private:
+
+        std::unique_ptr<Model> m_Model;
+
         ComPtr<ID3D11Device> m_pDevice;
         ComPtr<ID3D11DeviceContext> m_pContext;
 
@@ -51,6 +59,7 @@ namespace Engine {
         ComPtr<ID3DX11EffectPass> m_Pass;
         ComPtr<ID3DX11EffectMatrixVariable> m_WVPVar;
         
+        UINT m_IndexCount;
         ComPtr<ID3D11InputLayout> m_InputLayout;
         ComPtr<ID3D11Buffer> m_VertexBuffer;
         ComPtr<ID3D11Buffer> m_IndexBuffer;

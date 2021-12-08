@@ -27,6 +27,7 @@
     <ClCompile Include="Components\Camera.cpp" />
     <ClCompile Include="Components\GameComponent.cpp" />
     <ClCompile Include="Components\ModelComponent.cpp" />
+    <ClCompile Include="Components\PrimitiveModelComponent.cpp" />
     <ClCompile Include="Utils\Animator.cpp" />
     <ClCompile Include="Utils\Input.cpp" />
     <ClCompile Include="Utils\Mesh.cpp" />
@@ -43,10 +44,12 @@
     <ClInclude Include="Components\FPSComponent.h" />
     <ClInclude Include="Components\GameComponent.h" />
     <ClInclude Include="Components\ModelComponent.h" />
+    <ClInclude Include="Components\PrimitiveModelComponent.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TextComponent.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Utils\Animator.h" />
+    <ClInclude Include="Utils\AppIncl.h" />
     <ClInclude Include="Utils\Input.h" />
     <ClInclude Include="Utils\Mesh.h" />
     <ClInclude Include="Utils\Model.h" />
@@ -149,7 +152,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)\External\FX11\inc;$(SolutionDir)\External\DXTK\inc;$(SolutionDir)\External\ASSIMP\include;$(SolutionDir)\External\FMOD\inc;$(SolutionDir)\External\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(WindowsSDK_IncludePath);$(SolutionDir)External\FX11\inc;$(SolutionDir)External\DXTK\inc;$(SolutionDir)External\ASSIMP\include;$(SolutionDir)External\FMOD\inc;$(SolutionDir)External\ReactPhysics3D\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
@@ -175,7 +178,7 @@ copy "$(TargetDir)Intermediates\Engine.res" "$(SolutionDir)lib\"
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\External\DXTK\lib;$(SolutionDir)\External\FX11\lib;$(SolutionDir)\External\ASSIMP\lib;$(SolutionDir)\External\FMOD\lib;$(SolutionDir)\External\ReactPhysics3D\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\DXTK\lib;$(SolutionDir)External\FX11\lib;$(SolutionDir)External\ASSIMP\lib\Debug\;$(SolutionDir)External\FMOD\lib;$(SolutionDir)External\ReactPhysics3D\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -218,7 +221,7 @@ copy "$(TargetDir)Intermediates\Engine.res" "$(SolutionDir)lib\"
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
