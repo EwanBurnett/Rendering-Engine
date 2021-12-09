@@ -112,22 +112,66 @@ void Engine::ModelComponent::CreateBuffers()
 {
     Mesh* mesh = m_Model->Meshes().at(0);
 
-    const std::vector<XMFLOAT3>& src = mesh->Vertices();
+    //Create the vertex buffer
+    //(Position, Colour, Normal)
+    //TODO: add support for multiple vertex colour meshes
+    const std::vector<XMFLOAT3>& vertPos = mesh->Vertices();
+    std::vector<std::vector<XMFLOAT4>*> vertClrs = mesh->VertexColours();
+
     std::vector<Vertex> verts;
+    verts.reserve(vertPos.size());
 
-    verts.reserve(src.size());
-    
-    if (mesh->VertexColours().size() > 0) {
-        std::vector<XMFLOAT4>* vertClrs = mesh->VertexColours().at(0);
+    //Append the positions to the vertex buffer
+    for (size_t i = 0; i < vertPos.size(); i++) {
+        Vertex v;
+        
+        v.position = vertPos.at(i);
 
-        if (vertClrs->size() == src.size()) {
-            //TODO: Link to debug layer
+        if (vertClrs.size() > 0) {
+            v.color = vertClrs.at(0)->at(i);
         }
 
+        verts.push_back(v);
+    }
+    
 
+    //Bind the vertex buffer
+    D3D11_BUFFER_DESC vertexBufferDesc;
+    ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
+    vertexBufferDesc.ByteWidth = sizeof(Vertex) * verts.size();
+    vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+    D3D11_SUBRESOURCE_DATA vertexSubresourceData;
+    ZeroMemory(&vertexSubresourceData, sizeof(vertexSubresourceData));
+    vertexSubresourceData.pSysMem = &verts[0];
+
+    HRESULT hr = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, m_VertexBuffer.GetAddressOf());
+    if (FAILED(hr)) {
+        //TODO: Do some error handling
+        OutputDebugStringA("Something Went Wrong");
     }
 
+
+    //Create and bind the index buffer
     m_IndexCount = mesh->Indices().size();
+    std::vector<UINT> indices = mesh->Indices();
+
+    //Creating an index buffer Description
+    D3D11_BUFFER_DESC ibd;
+    ibd.Usage = D3D11_USAGE_DEFAULT;
+    ibd.ByteWidth = static_cast<UINT>(sizeof(UINT) * indices.size());
+    ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    ibd.CPUAccessFlags = 0;
+    ibd.MiscFlags = 0;
+    ibd.StructureByteStride = 0;
+
+    //Initializse the index buffer with our data
+    D3D11_SUBRESOURCE_DATA iInitData;
+    iInitData.pSysMem = &indices[0];
+
+    //Create the index buffer
+    m_pDevice->CreateBuffer(&ibd, &iInitData, m_IndexBuffer.GetAddressOf());
 
 
 }
@@ -160,7 +204,7 @@ void Engine::ModelComponent::Draw(float dt)
 
     m_Pass->Apply(0, m_pContext.Get());
 
-    
+    //m_pContext->Draw(1400, 0);
     m_pContext->DrawIndexed(m_IndexCount, 0, 0);
 }
 

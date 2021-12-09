@@ -16,6 +16,10 @@
 
 
 struct Vertex {
+    Vertex(){
+        position = DirectX::XMFLOAT3(0, 0, 0);
+        color = DirectX::XMFLOAT4(1, 0, 0, 0);
+    }
     Vertex(DirectX::XMFLOAT3 Position, DirectX::XMFLOAT4 Color) : position(Position), color(Color){}
 
     DirectX::XMFLOAT3 position;
