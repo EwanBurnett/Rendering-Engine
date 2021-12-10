@@ -8,6 +8,7 @@
 #include <Windows.h>
 #include <d3d11.h>
 #include <d3dcompiler.h>
+#include <WICTextureLoader.h>
 #include <d3dx11effect.h>
 #include "..\Backend\Graphics.h"
 #include "Camera.h"
@@ -18,13 +19,17 @@
 struct Vertex {
     Vertex(){
         position = DirectX::XMFLOAT3(0, 0, 0);
-        color = DirectX::XMFLOAT4(1, 0, 0, 0);
+        color = DirectX::XMFLOAT4(0, 0, 0, 0);
+        texCoords = DirectX::XMFLOAT2(0, 0);
+        normal = DirectX::XMFLOAT3(0, 0, 0);
     }
-    Vertex(DirectX::XMFLOAT3 Position, DirectX::XMFLOAT4 Color) : position(Position), color(Color){}
+    Vertex(DirectX::XMFLOAT3 Position, DirectX::XMFLOAT4 Color, DirectX::XMFLOAT2 TexCoords, DirectX::XMFLOAT3 Normal) : position(Position), color(Color), texCoords(TexCoords), normal(Normal){}
 
     DirectX::XMFLOAT3 position;
     float pad = 1.0f;
     DirectX::XMFLOAT4 color; 
+    DirectX::XMFLOAT2 texCoords;
+    DirectX::XMFLOAT3 normal;
 };
 
 namespace Engine {
@@ -63,6 +68,9 @@ namespace Engine {
         ComPtr<ID3DX11EffectPass> m_Pass;
         ComPtr<ID3DX11EffectMatrixVariable> m_WVPVar;
         
+        ComPtr<ID3D11ShaderResourceView> m_TextureView;
+        ComPtr<ID3DX11EffectShaderResourceVariable> m_ColorTextureVar;
+
         UINT m_IndexCount;
         ComPtr<ID3D11InputLayout> m_InputLayout;
         ComPtr<ID3D11Buffer> m_VertexBuffer;

@@ -25,7 +25,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
 
     //TODO: Rewrite effects for D3D11, and add to Effects directory
     //TODO: Load from a Resource file instead
-    HRESULT hr = D3DCompileFromFile(L"..\\..\\Resources\\Effects\\BasicEffect.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
+    HRESULT hr = D3DCompileFromFile(L"..\\..\\Resources\\Effects\\TextureMapping.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
     //D3DCompileFromFile(L"S", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
     if (FAILED(hr))
     {
@@ -59,7 +59,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
         //TODO: Do some error handling
     }
 
-    ID3DX11EffectVariable* var = m_Effect->GetVariableByName("WorldViewProjection");
+    ID3DX11EffectVariable* var = m_Effect->GetVariableByName("WorldViewProj");
     if (var == nullptr) {
         //TODO: Do some error handling
     }
@@ -68,6 +68,17 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     if (m_WVPVar->IsValid() == false) {
         //TODO: Do some error handling
     }
+
+    var = m_Effect->GetVariableByName("ColorTexture");
+    if (var == nullptr) {
+        //TODO: Do some error handling
+    }
+
+    m_ColorTextureVar = var->AsShaderResource();
+    if (m_ColorTextureVar->IsValid() == false) {
+        //TODO: Do some error handling
+    }
+
 
     var->Release();
 
@@ -78,6 +89,8 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[] = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
     hr = m_pDevice->CreateInputLayout(inputElementDescriptions, ARRAYSIZE(inputElementDescriptions), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, m_InputLayout.GetAddressOf());
@@ -85,11 +98,20 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
         //TODO: Do some error handling
     }
 
-    std::string a = "D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\book.fbx";
+    //Load the model
+    //TODO: Parameterize this
+    std::string a = "D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\rune_stone_low.fbx";
     //model = std::make_unique<Engine::Model>(gfx, "Resources\\Models\\Sphere.obj", true);
     m_Model = std::make_unique<Engine::Model>(gfx, a, true);
+
     CreateBuffers();
 
+    //Load the texture
+    std::wstring textureName = L"D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\rune_stone_low_DefaultMaterial_BaseColor.jpg";
+    hr = DirectX::CreateWICTextureFromFile(m_pDevice.Get(), m_pContext.Get(), textureName.c_str(), nullptr, &m_TextureView);
+    if (FAILED(hr)) {
+        //TODO: Do some error handling
+    }
    
 }
 
@@ -118,6 +140,7 @@ void Engine::ModelComponent::CreateBuffers()
     //TODO: add support for multiple vertex colour meshes
     const std::vector<XMFLOAT3>& vertPos = mesh->Vertices();
     std::vector<std::vector<XMFLOAT4>*> vertClrs = mesh->VertexColours();
+    std::vector<XMFLOAT3>* vertTexCoords = mesh->TexCoords().at(0);
 
     std::vector<Vertex> verts;
     verts.reserve(vertPos.size());
@@ -140,6 +163,9 @@ void Engine::ModelComponent::CreateBuffers()
             v.color.z = (float)(rng.RandInt(255)) / 255.0f;
             v.color.w = 1.0f;
         }
+
+        v.texCoords.x = vertTexCoords->at(i).x;
+        v.texCoords.y = vertTexCoords->at(i).y;
 
         verts.push_back(v);
     }
@@ -211,6 +237,8 @@ void Engine::ModelComponent::Draw(float dt)
     XMMATRIX wvp = world * m_Camera->GetViewMatrix() * m_Camera->GetProjectionMatrix();
 
     m_WVPVar->SetMatrix(reinterpret_cast<const float*>(&wvp));
+
+    m_ColorTextureVar->SetResource(m_TextureView.Get());
 
     m_Pass->Apply(0, m_pContext.Get());
 

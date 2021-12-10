@@ -131,6 +131,11 @@ const std::vector<DirectX::XMFLOAT3>& Engine::Mesh::Vertices() const
 	return(m_Vertices);
 }
 
+const std::vector<std::vector<DirectX::XMFLOAT3>*>& Engine::Mesh::TexCoords() const
+{
+	return(m_TexCoords);
+}
+
 const std::vector<std::vector<DirectX::XMFLOAT4>*>& Engine::Mesh::VertexColours() const
 {
 	return(m_VertexColours);
