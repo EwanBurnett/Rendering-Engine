@@ -17,7 +17,7 @@
 //Engine::AnimatedSpriteComponent*    sprite3[1];
 Engine::ModelComponent*             model;
 //Engine::ModelComponent*             model2;
-//Engine::ModelComponent*             model3[50];
+//Engine::ModelComponent*             model3[5];
 
 //DirectX::XMFLOAT4X4 viewproj;
 //int frameLimitSwitch = 0;
@@ -108,14 +108,14 @@ void Game::Init()
     //    m_Components.push_back(sprite3[i]);
     //}
 
-    /*for (int i = 0; i < std::size(model3); i++) {
-        model3[i] = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
-        model3[i]->SetTranslation(i, i, i);
-        model3[i]->SetTranslation(cos(i) * 100, cos(i) * 100, sin(i) * 100);
-        model3[i]->SetRotation(360 * sin(i), 360 * cos(i), 360 * tan(i));
-        model3[i]->SetScale((i % 10) / 1);
-        m_Components.push_back(model3[i]);
-    }*/
+    //for (int i = 0; i < std::size(model3); i++) {
+    //    model3[i] = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
+    //    model3[i]->SetTranslation(i, i, i);
+    //    model3[i]->SetTranslation(cos(i) * 100, cos(i) * 100, sin(i) * 100);
+    //    model3[i]->SetRotation(360 * sin(i), 360 * cos(i), 360 * tan(i));
+    //    model3[i]->SetScale((i % 10) / 1);
+    //    m_Components.push_back(model3[i]);
+    //}
 
     
     //
@@ -172,123 +172,123 @@ void Game::Update(float dt)
 
     //float speed = 45.0f;
 
-    ///*m_Camera->SetTarget(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);
-    //m_Camera->SetPosition(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);*/
-    ////Cam
-    //if (m_Keyboard->KeyDown(KB_KEY_I)) {
-    //    m_Camera->Position().y += speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_J)) {
-    //    m_Camera->Position().x += speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_K)) {
-    //    m_Camera->Position().y -= speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_L)) {
-    //    m_Camera->Position().x -= speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_O)) {
-    //    m_Camera->Position().z += speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_P)) {
-    //    m_Camera->Position().z -= speed * dt;
-    //}
+    /*m_Camera->SetTarget(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);
+    m_Camera->SetPosition(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);*/
+    //Cam
+    if (m_Keyboard->KeyDown(KB_KEY_I)) {
+        m_Camera->Position().y += speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_J)) {
+        m_Camera->Position().x += speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_K)) {
+        m_Camera->Position().y -= speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_L)) {
+        m_Camera->Position().x -= speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_O)) {
+        m_Camera->Position().z += speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_P)) {
+        m_Camera->Position().z -= speed * dt;
+    }
 
     ////TODO: Defer these calculations into the camera object, so these can just call a function.
-    //if (m_Keyboard->KeyDown(KB_KEY_W)) {
-    //    m_Camera->Direction().y += 0.3 * speed * dt;        
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_A)) {
-    //    m_Camera->Direction().x += 0.3 * speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_S)) {
-    //    m_Camera->Direction().y -= 0.3 * speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_D)) {
-    //    m_Camera->Direction().x -= 0.3 * speed * dt;
-    //}
-    //
-    //static float theta = 0;
-    //static float phi = 0;
-    //static float radius = 10.0f;
+    if (m_Keyboard->KeyDown(KB_KEY_W)) {
+        m_Camera->Direction().y += 0.3 * speed * dt;        
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_A)) {
+        m_Camera->Direction().x += 0.3 * speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_S)) {
+        m_Camera->Direction().y -= 0.3 * speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_D)) {
+        m_Camera->Direction().x -= 0.3 * speed * dt;
+    }
+    
+    static float theta = 0;
+    static float phi = 0;
+    static float radius = 10.0f;
 
-    //if (m_Keyboard->KeyPressed(KB_NUM_0)) {
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_PERSPECTIVE);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_1)) {       
-    //    theta = 0;
-    //    phi = 0;
-    //    radius = 10.0f;
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_ORBIT);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_2)) {
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_TARGET);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_3)) {
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_TOP);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_4)) {
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_RIGHT);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_5)) {
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_FRONT);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_6)) {
-    //    m_Camera->Reset();
-    //}
-    //
+    if (m_Keyboard->KeyPressed(KB_NUM_0)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_PERSPECTIVE);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_1)) {       
+        theta = 0;
+        phi = 0;
+        radius = 10.0f;
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_ORBIT);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_2)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_TARGET);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_3)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_TOP);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_4)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_RIGHT);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_5)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_FRONT);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_6)) {
+        m_Camera->Reset();
+    }
+    
 
 
 
-    //if (m_Keyboard->KeyDown(KB_KEY_0)) {
-    //    if (radius >= 0.2f) {
-    //        radius += speed * dt;
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    }
-    //    
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_9)) {
-    //    if (radius >= 0.2f) {
-    //        radius -= speed * dt;
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    }
-    //}
+    if (m_Keyboard->KeyDown(KB_KEY_0)) {
+        if (radius >= 0.2f) {
+            radius += speed * dt;
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        }
+        
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_9)) {
+        if (radius >= 0.2f) {
+            radius -= speed * dt;
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        }
+    }
 
-    //if (m_Keyboard->KeyDown(KB_NUM_ADD)) {
-    //    if (theta < XMConvertToRadians(180)) {
-    //        theta += XMConvertToRadians(4 * speed * dt);
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    } 
-    //    else {
-    //        theta = XMConvertToRadians(-180);
-    //    }
-    //}
+    if (m_Keyboard->KeyDown(KB_NUM_ADD)) {
+        if (theta < XMConvertToRadians(180)) {
+            theta += XMConvertToRadians(4 * speed * dt);
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        } 
+        else {
+            theta = XMConvertToRadians(-180);
+        }
+    }
 
-    //if (m_Keyboard->KeyDown(KB_NUM_SUB)) {
-    //    if (theta > XMConvertToRadians(-180)) {
-    //        theta -= XMConvertToRadians(4 * speed * dt);
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    }
-    //    else {
-    //        theta = XMConvertToRadians(180);
-    //    }
-    //}
+    if (m_Keyboard->KeyDown(KB_NUM_SUB)) {
+        if (theta > XMConvertToRadians(-180)) {
+            theta -= XMConvertToRadians(4 * speed * dt);
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        }
+        else {
+            theta = XMConvertToRadians(180);
+        }
+    }
 
-    //if (m_Keyboard->KeyDown(KB_NUM_MUL)) {
-    //    if (phi < XMConvertToRadians(90)) {
-    //        phi += XMConvertToRadians(2 * speed * dt);
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    }
-    //}
+    if (m_Keyboard->KeyDown(KB_NUM_MUL)) {
+        if (phi < XMConvertToRadians(90)) {
+            phi += XMConvertToRadians(2 * speed * dt);
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        }
+    }
 
-    //if (m_Keyboard->KeyDown(KB_NUM_DIV)) {
-    //    if (phi > XMConvertToRadians(-90)) {
-    //        phi -= XMConvertToRadians(2 * speed * dt);
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    }
-    //}
-    //
-    //
+    if (m_Keyboard->KeyDown(KB_NUM_DIV)) {
+        if (phi > XMConvertToRadians(-90)) {
+            phi -= XMConvertToRadians(2 * speed * dt);
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        }
+    }
+    
+    
 
     //DirectX::XMStoreFloat4x4(&viewproj, m_Camera->GetViewMatrix() * m_Camera->GetProjectionMatrix());
     //DirectX::XMMATRIX m = m_Camera->GetViewMatrix() * m_Camera->GetProjectionMatrix();

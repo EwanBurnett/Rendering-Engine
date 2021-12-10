@@ -1,4 +1,5 @@
 #include "ModelComponent.h"
+#include "../Utils/Random.h"
 
 using namespace DirectX;
 
@@ -84,7 +85,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
         //TODO: Do some error handling
     }
 
-    std::string a = "D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\amber.fbx";
+    std::string a = "D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\book.fbx";
     //model = std::make_unique<Engine::Model>(gfx, "Resources\\Models\\Sphere.obj", true);
     m_Model = std::make_unique<Engine::Model>(gfx, a, true);
     CreateBuffers();
@@ -126,9 +127,18 @@ void Engine::ModelComponent::CreateBuffers()
         Vertex v;
         
         v.position = vertPos.at(i);
-
+        
         if (vertClrs.size() > 0) {
+            //XMFLOAT4 color = vertClrs.at(0)->at(i);
             v.color = vertClrs.at(0)->at(i);
+        }
+        else {
+            RNG rng;
+            rng.Seed(0);
+            v.color.x = (float)(rng.RandInt(255)) / 255.0f;
+            v.color.y = (float)(rng.RandInt(255)) / 255.0f;
+            v.color.z = (float)(rng.RandInt(255)) / 255.0f;
+            v.color.w = 1.0f;
         }
 
         verts.push_back(v);
