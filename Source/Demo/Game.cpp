@@ -16,11 +16,11 @@
 //Engine::AnimatedSpriteComponent*    sprite2;
 //Engine::AnimatedSpriteComponent*    sprite3[1];
 Engine::ModelComponent*             model;
-//Engine::ModelComponent*             model2;
-//Engine::ModelComponent*             model3[1];
+Engine::ModelComponent*             model2;
+Engine::ModelComponent*             model3[19];
 
-DirectX::XMFLOAT4X4 viewproj;
-int frameLimitSwitch = 0;
+//DirectX::XMFLOAT4X4 viewproj;
+//int frameLimitSwitch = 0;
 
 //Init is called when the application is started.
 void Game::Init()
@@ -56,13 +56,27 @@ void Game::Init()
     //m_Components.push_back(cameraMatrices);
     //   
 
+    
+
    model = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
-   model->SetOrigin(0.5, 0.5, 0.5);
-   model->SetRotation(30, 30, 45);
-   model->SetTranslation(0, 0, -10);
-   model->SetScale(1, 1, 1);
+   model->SetOrigin(0, 0, 0);
+   //model->SetRotation(30, 30, 45);
+   model->SetTranslation(0, 0, 0);
+   model->SetScale(5000, 5000, 5000);
+   model->SetModelPath("D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\Sphere.fbx");
+   model->SetTexture(L"D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\T_Sky_Space.png");
    m_Components.push_back(model);
 
+   model2 = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
+   model2->SetOrigin(5, 0.5, 8);
+   model2->SetModelPath("D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\SM_Pillar.fbx");
+   model2->SetTexture(L"D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\T_Brick.png");
+   model2->SetScale(0.2, 0.2, 0.2);
+   m_Components.push_back(model2);
+   //// model2->SetRotation(30, 30, 45);
+   //model2->SetTranslation(0, 0, -10);
+   //model2->SetScale(1, 1, 1);
+   //m_Components.push_back(model2);
     //sprite = new Engine::SpriteComponent(m_Graphics.get());
     //sprite->SetPosition(800, 200);
     //sprite->SetColor(0, 1, 0, 1);
@@ -100,13 +114,20 @@ void Game::Init()
     //    m_Components.push_back(sprite3[i]);
     //}
 
-        //for (int i = 0; i < std::size(model3); i++) {
-        //    model3[i] = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
-        //    model3[i]->SetTranslation(cos(i) * 100, cos(i) * 100, sin(i) * 100);
-        //    //model3[i]->SetRotation(360 * sin(i), 360 * cos(i), 360 * tan(i));
-        //    //model3[i]->SetScale(i % 15);
-        //    m_Components.push_back(model3[i]);
-        //}
+    for (int i = 0; i < std::size(model3); i++) {
+        model3[i] = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
+        model3[i]->SetModelPath("D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\SM_Pillar.fbx");
+        model3[i]->SetTexture(L"D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\T_Brick.png");
+        
+        //model3[i]->SetTranslation(i, i, i);
+        model3[i]->SetTranslation((i % 5) * 10, 0, (i % 5) * 10);
+        //model3[i]->SetRotation(360 * sin(i), 360 * cos(i), 360 * tan(i));
+        //model3[i]->SetScale((i % 10) / 1);
+        model3[i]->SetScale(0.3 / (i % 3), 0.3 / (i % 6), 0.3 / (i % 3));
+        m_Components.push_back(model3[i]);
+        
+    }
+
     
     //
 }
@@ -114,16 +135,17 @@ void Game::Init()
 //Update is called once per frame. 
 void Game::Update(float dt)
 {
-    static float speed;
+    model->SetTranslation(m_Camera->Position().x, m_Camera->Position().y, m_Camera->Position().z);
+    static float speed = 5;
     if (m_Keyboard->KeyDown(KB_DIR_UP)) {
         speed += 10.0f * dt;
     }
     if (m_Keyboard->KeyDown(KB_DIR_DOWN)) {
         speed -= 10.0f * dt;
     }
-    static float rot;
+    /*static float rot;
     model->SetRotation(-rot, rot, rot / 2);
-    rot += speed * dt;
+    rot += speed * dt;*/
 
     ////TODO: Format this properly (16 rows, 2 columns, 8 bits per column)
     //std::stringstream out;
@@ -162,123 +184,123 @@ void Game::Update(float dt)
 
     //float speed = 45.0f;
 
-    ///*m_Camera->SetTarget(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);
-    //m_Camera->SetPosition(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);*/
-    ////Cam
-    //if (m_Keyboard->KeyDown(KB_KEY_I)) {
-    //    m_Camera->Position().y += speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_J)) {
-    //    m_Camera->Position().x += speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_K)) {
-    //    m_Camera->Position().y -= speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_L)) {
-    //    m_Camera->Position().x -= speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_O)) {
-    //    m_Camera->Position().z += speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_P)) {
-    //    m_Camera->Position().z -= speed * dt;
-    //}
+    /*m_Camera->SetTarget(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);
+    m_Camera->SetPosition(sprite2->SpritePosition().x, sprite2->SpritePosition().y, 0);*/
+    //Cam
+    if (m_Keyboard->KeyDown(KB_KEY_I)) {
+        m_Camera->Position().y += speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_J)) {
+        m_Camera->Position().x += speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_K)) {
+        m_Camera->Position().y -= speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_L)) {
+        m_Camera->Position().x -= speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_O)) {
+        m_Camera->Position().z += speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_P)) {
+        m_Camera->Position().z -= speed * dt;
+    }
 
     ////TODO: Defer these calculations into the camera object, so these can just call a function.
-    //if (m_Keyboard->KeyDown(KB_KEY_W)) {
-    //    m_Camera->Direction().y += 0.3 * speed * dt;        
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_A)) {
-    //    m_Camera->Direction().x += 0.3 * speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_S)) {
-    //    m_Camera->Direction().y -= 0.3 * speed * dt;
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_D)) {
-    //    m_Camera->Direction().x -= 0.3 * speed * dt;
-    //}
-    //
-    //static float theta = 0;
-    //static float phi = 0;
-    //static float radius = 10.0f;
+    if (m_Keyboard->KeyDown(KB_KEY_W)) {
+        m_Camera->Direction().y += 0.3 * speed * dt;        
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_A)) {
+        m_Camera->Direction().x += 0.3 * speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_S)) {
+        m_Camera->Direction().y -= 0.3 * speed * dt;
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_D)) {
+        m_Camera->Direction().x -= 0.3 * speed * dt;
+    }
+    
+    static float theta = 0;
+    static float phi = 0;
+    static float radius = 10.0f;
 
-    //if (m_Keyboard->KeyPressed(KB_NUM_0)) {
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_PERSPECTIVE);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_1)) {       
-    //    theta = 0;
-    //    phi = 0;
-    //    radius = 10.0f;
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_ORBIT);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_2)) {
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_TARGET);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_3)) {
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_TOP);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_4)) {
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_RIGHT);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_5)) {
-    //    m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_FRONT);
-    //}
-    //if (m_Keyboard->KeyPressed(KB_NUM_6)) {
-    //    m_Camera->Reset();
-    //}
-    //
+    if (m_Keyboard->KeyPressed(KB_NUM_0)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_PERSPECTIVE);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_1)) {       
+        theta = 0;
+        phi = 0;
+        radius = 10.0f;
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_ORBIT);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_2)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_TARGET);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_3)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_TOP);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_4)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_RIGHT);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_5)) {
+        m_Camera->SetViewMode(Engine::Camera::ViewMode::VIEW_FRONT);
+    }
+    if (m_Keyboard->KeyPressed(KB_NUM_6)) {
+        m_Camera->Reset();
+    }
+    
 
 
 
-    //if (m_Keyboard->KeyDown(KB_KEY_0)) {
-    //    if (radius >= 0.2f) {
-    //        radius += speed * dt;
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    }
-    //    
-    //}
-    //if (m_Keyboard->KeyDown(KB_KEY_9)) {
-    //    if (radius >= 0.2f) {
-    //        radius -= speed * dt;
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    }
-    //}
+    if (m_Keyboard->KeyDown(KB_KEY_0)) {
+        if (radius >= 0.2f) {
+            radius += speed * dt;
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        }
+        
+    }
+    if (m_Keyboard->KeyDown(KB_KEY_9)) {
+        if (radius >= 0.2f) {
+            radius -= speed * dt;
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        }
+    }
 
-    //if (m_Keyboard->KeyDown(KB_NUM_ADD)) {
-    //    if (theta < XMConvertToRadians(180)) {
-    //        theta += XMConvertToRadians(4 * speed * dt);
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    } 
-    //    else {
-    //        theta = XMConvertToRadians(-180);
-    //    }
-    //}
+    if (m_Keyboard->KeyDown(KB_NUM_ADD)) {
+        if (theta < XMConvertToRadians(180)) {
+            theta += XMConvertToRadians(4 * speed * dt);
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        } 
+        else {
+            theta = XMConvertToRadians(-180);
+        }
+    }
 
-    //if (m_Keyboard->KeyDown(KB_NUM_SUB)) {
-    //    if (theta > XMConvertToRadians(-180)) {
-    //        theta -= XMConvertToRadians(4 * speed * dt);
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    }
-    //    else {
-    //        theta = XMConvertToRadians(180);
-    //    }
-    //}
+    if (m_Keyboard->KeyDown(KB_NUM_SUB)) {
+        if (theta > XMConvertToRadians(-180)) {
+            theta -= XMConvertToRadians(4 * speed * dt);
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        }
+        else {
+            theta = XMConvertToRadians(180);
+        }
+    }
 
-    //if (m_Keyboard->KeyDown(KB_NUM_MUL)) {
-    //    if (phi < XMConvertToRadians(90)) {
-    //        phi += XMConvertToRadians(2 * speed * dt);
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    }
-    //}
+    if (m_Keyboard->KeyDown(KB_NUM_MUL)) {
+        if (phi < XMConvertToRadians(90)) {
+            phi += XMConvertToRadians(2 * speed * dt);
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        }
+    }
 
-    //if (m_Keyboard->KeyDown(KB_NUM_DIV)) {
-    //    if (phi > XMConvertToRadians(-90)) {
-    //        phi -= XMConvertToRadians(2 * speed * dt);
-    //        m_Camera->SetOrbitalAxis(radius, theta, phi);
-    //    }
-    //}
-    //
-    //
+    if (m_Keyboard->KeyDown(KB_NUM_DIV)) {
+        if (phi > XMConvertToRadians(-90)) {
+            phi -= XMConvertToRadians(2 * speed * dt);
+            m_Camera->SetOrbitalAxis(radius, theta, phi);
+        }
+    }
+    
+    
 
     //DirectX::XMStoreFloat4x4(&viewproj, m_Camera->GetViewMatrix() * m_Camera->GetProjectionMatrix());
     //DirectX::XMMATRIX m = m_Camera->GetViewMatrix() * m_Camera->GetProjectionMatrix();

@@ -85,9 +85,9 @@ bool D3D11_Graphics::Init()
         featureLevels,
         ARRAYSIZE(featureLevels),
         D3D11_SDK_VERSION,
-        m_pDevice.GetAddressOf(),
+        m_pDevice.ReleaseAndGetAddressOf(),
         &m_FeatureLevel,
-        m_pContext.GetAddressOf()
+        m_pContext.ReleaseAndGetAddressOf()
     );
 
     if (FAILED(hr)) {

@@ -11,4 +11,6 @@ Build/
 
 Source/Demo/Release/
 
+*.docx
+
 Docs/
