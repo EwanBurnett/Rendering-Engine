@@ -9,6 +9,7 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <WICTextureLoader.h>
+#include <DDSTextureLoader.h>
 #include <d3dx11effect.h>
 #include "..\Backend\Graphics.h"
 #include "Camera.h"
@@ -40,10 +41,14 @@ namespace Engine {
 
         virtual void CreateBuffers();
 
+        void Init() override;
         void Update(float dt) override;
         void Draw(float dt) override;
             
+        void SetModelPath(std::string path);
+        void SetTexture(std::wstring path, int slot = 0);
         void Reset();
+        UINT FaceCount();
 
         void SetScale(float x = 1.0f, float y = 1.0f, float z = 1.0f);
         void SetRotation(float x = 0.0f, float y = 0.0f, float z = 0.0f);
@@ -56,13 +61,15 @@ namespace Engine {
         XMFLOAT3 m_Translation;
         XMFLOAT3 m_Origin;
 
-    //private:
+    private:
+        std::string m_ModelPath;
+        std::vector<std::wstring> m_TexturePaths;
 
         std::unique_ptr<Model> m_Model;
-
+        D3D11_Graphics* m_pGfx;
         ComPtr<ID3D11Device> m_pDevice;
         ComPtr<ID3D11DeviceContext> m_pContext;
-
+        
         ComPtr<ID3DX11Effect> m_Effect;
         ComPtr<ID3DX11EffectTechnique> m_Technique;
         ComPtr<ID3DX11EffectPass> m_Pass;

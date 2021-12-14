@@ -131,6 +131,21 @@ const std::vector<DirectX::XMFLOAT3>& Engine::Mesh::Vertices() const
 	return(m_Vertices);
 }
 
+const std::vector<DirectX::XMFLOAT3>& Engine::Mesh::Normals() const
+{
+	return(m_Normals);
+}
+
+const std::vector<DirectX::XMFLOAT3>& Engine::Mesh::Tangents() const
+{
+	return(m_Tangents);
+}
+
+const std::vector<DirectX::XMFLOAT3>& Engine::Mesh::Binormals() const
+{
+	return(m_Binormals);
+}
+
 const std::vector<std::vector<DirectX::XMFLOAT3>*>& Engine::Mesh::TexCoords() const
 {
 	return(m_TexCoords);
@@ -139,6 +154,11 @@ const std::vector<std::vector<DirectX::XMFLOAT3>*>& Engine::Mesh::TexCoords() co
 const std::vector<std::vector<DirectX::XMFLOAT4>*>& Engine::Mesh::VertexColours() const
 {
 	return(m_VertexColours);
+}
+
+UINT Engine::Mesh::FaceCount() const
+{
+	return m_FaceCount;
 }
 
 const std::vector<UINT>& Engine::Mesh::Indices() const

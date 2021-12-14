@@ -30,8 +30,6 @@ namespace Engine {
         std::vector<ModelMaterial*> m_Materials;
 
         D3D11_Graphics* m_Graphics;
-
-
     };
 
 }

@@ -16,8 +16,8 @@
 //Engine::AnimatedSpriteComponent*    sprite2;
 //Engine::AnimatedSpriteComponent*    sprite3[1];
 Engine::ModelComponent*             model;
-//Engine::ModelComponent*             model2;
-//Engine::ModelComponent*             model3[5];
+Engine::ModelComponent*             model2;
+Engine::ModelComponent*             model3[19];
 
 //DirectX::XMFLOAT4X4 viewproj;
 //int frameLimitSwitch = 0;
@@ -59,14 +59,20 @@ void Game::Init()
     
 
    model = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
-   model->SetOrigin(0.5, 0.5, 0.5);
-   model->SetRotation(30, 30, 45);
-   model->SetTranslation(0, 0, -10);
-   model->SetScale(2, 2, 2);
+   model->SetOrigin(0, 0, 0);
+   //model->SetRotation(30, 30, 45);
+   model->SetTranslation(0, 0, 0);
+   model->SetScale(5000, 5000, 5000);
+   model->SetModelPath("D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\Sphere.fbx");
+   model->SetTexture(L"D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\T_Sky_Space.png");
    m_Components.push_back(model);
 
-   //model2 = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
-   //model2->SetOrigin(0.5, 0.5, 0.5);
+   model2 = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
+   model2->SetOrigin(5, 0.5, 8);
+   model2->SetModelPath("D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\SM_Pillar.fbx");
+   model2->SetTexture(L"D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\T_Brick.png");
+   model2->SetScale(0.2, 0.2, 0.2);
+   m_Components.push_back(model2);
    //// model2->SetRotation(30, 30, 45);
    //model2->SetTranslation(0, 0, -10);
    //model2->SetScale(1, 1, 1);
@@ -108,14 +114,19 @@ void Game::Init()
     //    m_Components.push_back(sprite3[i]);
     //}
 
-    //for (int i = 0; i < std::size(model3); i++) {
-    //    model3[i] = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
-    //    model3[i]->SetTranslation(i, i, i);
-    //    model3[i]->SetTranslation(cos(i) * 100, cos(i) * 100, sin(i) * 100);
-    //    model3[i]->SetRotation(360 * sin(i), 360 * cos(i), 360 * tan(i));
-    //    model3[i]->SetScale((i % 10) / 1);
-    //    m_Components.push_back(model3[i]);
-    //}
+    for (int i = 0; i < std::size(model3); i++) {
+        model3[i] = new Engine::ModelComponent(m_Graphics.get(), m_Camera);
+        model3[i]->SetModelPath("D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\SM_Pillar.fbx");
+        model3[i]->SetTexture(L"D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\T_Brick.png");
+        
+        //model3[i]->SetTranslation(i, i, i);
+        model3[i]->SetTranslation((i % 5) * 10, 0, (i % 5) * 10);
+        //model3[i]->SetRotation(360 * sin(i), 360 * cos(i), 360 * tan(i));
+        //model3[i]->SetScale((i % 10) / 1);
+        model3[i]->SetScale(0.3 / (i % 3), 0.3 / (i % 6), 0.3 / (i % 3));
+        m_Components.push_back(model3[i]);
+        
+    }
 
     
     //
@@ -124,6 +135,7 @@ void Game::Init()
 //Update is called once per frame. 
 void Game::Update(float dt)
 {
+    model->SetTranslation(m_Camera->Position().x, m_Camera->Position().y, m_Camera->Position().z);
     static float speed = 5;
     if (m_Keyboard->KeyDown(KB_DIR_UP)) {
         speed += 10.0f * dt;
@@ -131,9 +143,9 @@ void Game::Update(float dt)
     if (m_Keyboard->KeyDown(KB_DIR_DOWN)) {
         speed -= 10.0f * dt;
     }
-    static float rot;
+    /*static float rot;
     model->SetRotation(-rot, rot, rot / 2);
-    rot += speed * dt;
+    rot += speed * dt;*/
 
     ////TODO: Format this properly (16 rows, 2 columns, 8 bits per column)
     //std::stringstream out;
