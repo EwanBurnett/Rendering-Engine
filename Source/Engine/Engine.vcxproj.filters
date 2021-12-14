@@ -137,7 +137,10 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Resources\Effects\BasicEffect.fx" />
     <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\Build\Debug\Resources\Effects\TextureMapping.fx" />
+    <FxCompile Include="..\..\Resources\Effects\BasicEffect.fx" />
   </ItemGroup>
 </Project>

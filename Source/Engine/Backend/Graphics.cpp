@@ -33,14 +33,6 @@ D3D11_Graphics::D3D11_Graphics(HWND &hWnd, UINT width, UINT height)
 
 D3D11_Graphics::~D3D11_Graphics()
 {
-    //TODO: Convert everything to use WRL::COMPTR 
-    /*m_pRenderTargetView->Release();
-    m_pDepthStencilView->Release();*/
-    //m_pSwapChain->Release();
-    if (m_pSwapChain != nullptr) {
-       // m_pSwapChain->Release();
-    }
-
     //DEBUG Report any live objects after we've cleaned up
 #if defined(DEBUG) | defined (_DEBUG)
     ID3D11Debug* d3dDebug;
@@ -53,10 +45,6 @@ D3D11_Graphics::~D3D11_Graphics()
     }
    
 #endif
-
-    /*if (m_pDevice.Get() != nullptr) {
-        m_pDevice->Release();
-    }*/
 }
 
 bool D3D11_Graphics::Init()
@@ -177,8 +165,6 @@ bool D3D11_Graphics::Init()
     dxgiAdapter->Release();
     dxgiFactory->Release();
     
-
-    //TODO: Add HR checks (? or take some out)
     ID3D11Texture2D* backBuffer;
     m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer);
     backBuffer->GetDesc(&m_BackBufferDesc);
@@ -259,7 +245,6 @@ bool D3D11_Graphics::Init()
 
     m_pContext->RSSetViewports(1, &m_ViewPort);
 
-    //TODO: Compile Shaders 
     //TODO: Add support for window resizing (Recreate swapchain)
     return true;
 }

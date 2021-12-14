@@ -103,6 +103,8 @@ void Engine::Mesh::CreateIndexBuffer(ID3D11Buffer** ppIndexBuffer)
 {
 	if (ppIndexBuffer == nullptr) {
 		//TODO: Link to debug layer
+		OutputDebugStringA("Index Buffer is invalid.");
+		assert(false);
 	}
 
 	D3D11_BUFFER_DESC ibd = { };
@@ -122,6 +124,8 @@ void Engine::Mesh::CreateIndexBuffer(ID3D11Buffer** ppIndexBuffer)
 	//Attempt to create the index buffer
 	if (FAILED(m_Model.Graphics()->Device()->CreateBuffer(&ibd, &iInitData, ppIndexBuffer))) {
 		//TODO: Link to Debug Layer
+		OutputDebugStringA("Failed to create Index Buffer");
+		assert(false);
 	}
 
 }

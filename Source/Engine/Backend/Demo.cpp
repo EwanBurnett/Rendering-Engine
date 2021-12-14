@@ -82,10 +82,6 @@ void Engine::Demo::Shutdown()
     Exit();
 }
 
-//Demo& Engine::Demo::operator=(const Demo& rhs)
-//{
-//    // TODO: insert return statement here
-//}
 
 POINT Engine::Demo::CenterWindow(int windowWidth, int windowHeight)
 {

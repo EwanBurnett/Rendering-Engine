@@ -101,6 +101,7 @@ inline void Engine::SpriteComponent::SetSprite(std::wstring filePath)
     //TODO: Replace with Debug layer
     if (FAILED(hr)) {
         OutputDebugString(L"Unable to load texture");
+        assert(false);
     }
     
     //Acquire the width and height of the texture

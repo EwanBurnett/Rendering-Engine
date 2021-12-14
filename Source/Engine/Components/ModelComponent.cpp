@@ -25,21 +25,30 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
 
     //TODO: Load from a Resource file instead
     //TODO: Upgrade to use m_EffectPath variable
-    HRESULT hr = D3DCompileFromFile(L"..\\..\\Resources\\Effects\\TextureMapping.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
-    if (FAILED(hr))
-    {
-        //TODO: Do some error handling
-        OutputDebugStringA("Unable to compile shader from file.\n");
+    HRESULT hr = D3DReadFileToBlob(L"..\\..\\Resources\\Effects\\TextureMapping.cso", &compiledShader);
+    if (FAILED(hr)) {
+        OutputDebugStringA("Unable to read precompiled shader. Attempting to compile from source file.");
+
+        hr = D3DCompileFromFile(L"..\\..\\Resources\\Effects\\TextureMapping.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
+        if (FAILED(hr))
+        {
+            //TODO: Do some error handling
+            OutputDebugStringA("Unable to compile shader from file.\n");
+            assert(false);
+        }
+        if (errorMessages != nullptr) {
+            //TODO: Do some error handling
+            OutputDebugStringA("Shader Compilation Errors found - \n");
+            OutputDebugString((LPCWSTR)errorMessages->GetBufferPointer());
+            //assert(false);
+        }
     }
-    if(errorMessages != nullptr) {
-        //TODO: Do some error handling
-        OutputDebugStringA("Shader Compilation Errors found - \n");
-        OutputDebugString((LPCWSTR)errorMessages->GetBufferPointer());
-    }
+    
 
     if (compiledShader == nullptr) {
         //TODO: Do some error handling
         OutputDebugStringA("Compiled shader is invalid.\n");
+        assert(false);
     }
 
     hr = D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(), 0, m_pDevice.Get(), m_Effect.GetAddressOf());
@@ -47,6 +56,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     if (FAILED(hr)) {
         //TODO: Do some error handling
         OutputDebugStringA("Error in creating effect.\n");
+        assert(false);
     }
 
     compiledShader->Release();
@@ -56,33 +66,43 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     if (m_Technique == nullptr) {
         //TODO: Do some error handling
         OutputDebugStringA("Unable to retrieve technique.\n");
+        assert(false);
     }
 
     m_Pass = m_Technique->GetPassByName("p0");
     if (m_Pass == nullptr) {
         //TODO: Do some error handling
         OutputDebugStringA("Unable to retrieve pass.\n");
+        assert(false);
     }
 
     ID3DX11EffectVariable* var = m_Effect->GetVariableByName("WorldViewProj");
     if (var == nullptr) {
         //TODO: Do some error handling
         OutputDebugStringA("Unable to retrieve Variable WorldViewProj.\n");
+        assert(false);
     }
+
 
     m_WVPVar = var->AsMatrix();
     if (m_WVPVar->IsValid() == false) {
         //TODO: Do some error handling
+        OutputDebugStringA("Shader Variable Cast Failed");
+        assert(false);
     }
 
     var = m_Effect->GetVariableByName("ColorTexture");
     if (var == nullptr) {
         //TODO: Do some error handling
+        OutputDebugStringA("Shader Variable Cast Failed");
+        assert(false);
     }
 
     m_ColorTextureVar = var->AsShaderResource();
     if (m_ColorTextureVar->IsValid() == false) {
         //TODO: Do some error handling
+        OutputDebugStringA("Shader Variable Cast Failed");
+        assert(false);
     }
 
 
@@ -102,6 +122,8 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     hr = m_pDevice->CreateInputLayout(inputElementDescriptions, ARRAYSIZE(inputElementDescriptions), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, m_InputLayout.GetAddressOf());
     if (FAILED(hr)) {
         //TODO: Do some error handling
+        OutputDebugStringA("Unable to create Input Layout.");
+        assert(false);
     }
 
     
@@ -119,12 +141,10 @@ void Engine::ModelComponent::CreateBuffers()
     std::vector<UINT> indices;
 
     for (size_t t = 0; t < (m_Model->Meshes().size()); t++) {
-    //for (size_t t = 0; t < 2; t++) {
         Mesh* mesh = m_Model->Meshes().at(t);
 
         //Create the vertex buffer
         //(Position, Colour, Normal)
-        //TODO: add support for multiple vertex colour meshes
         const std::vector<XMFLOAT3>& vertPos = mesh->Vertices();
         std::vector<std::vector<XMFLOAT4>*> vertClrs = mesh->VertexColours();
         std::vector<std::vector<XMFLOAT3>*> vertTexCoords = mesh->TexCoords();
@@ -135,14 +155,13 @@ void Engine::ModelComponent::CreateBuffers()
 
         //TODO: assert whether each element == size of vertex positions
 
-        //Append the positions to the vertex buffer
+        //Append the verts to the vertex array
         for (size_t i = 0; i < vertPos.size(); i++) {
             Vertex v;
 
             v.position = vertPos.at(i);
 
             if (vertClrs.size() > 0) {
-                //XMFLOAT4 color = vertClrs.at(0)->at(i);
                 v.color = vertClrs.at(0)->at(i);
             }
 #if defined(DEBUG) | defined(_DEBUG)
@@ -169,6 +188,8 @@ void Engine::ModelComponent::CreateBuffers()
         for (int i = 0; i < mesh->Indices().size(); i++) {
             indices.push_back(mesh->Indices().at(i));
         }
+
+        mesh->CreateIndexBuffer(m_IndexBuffer.GetAddressOf());
     }
 
     OutputDebugStringA("Binding Model Buffers\n");
@@ -190,29 +211,32 @@ void Engine::ModelComponent::CreateBuffers()
     HRESULT hr = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, m_VertexBuffer.GetAddressOf());
     if (FAILED(hr)) {
         //TODO: Do some error handling
-        OutputDebugStringA("Something Went Wrong");
+        OutputDebugStringA("Unable to create Vertex Buffer");
+        assert(false);
     }
 
 
     //Create and bind the index buffer
     
+    ////Creating an index buffer Description
+    //D3D11_BUFFER_DESC ibd;
+    //ibd.Usage = D3D11_USAGE_DEFAULT;
+    //ibd.ByteWidth = static_cast<UINT>(sizeof(UINT) * indices.size());
+    //ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    //ibd.CPUAccessFlags = 0;
+    //ibd.MiscFlags = 0;
+    //ibd.StructureByteStride = 0;
 
-    //Creating an index buffer Description
-    D3D11_BUFFER_DESC ibd;
-    ibd.Usage = D3D11_USAGE_DEFAULT;
-    ibd.ByteWidth = static_cast<UINT>(sizeof(UINT) * indices.size());
-    ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    ibd.CPUAccessFlags = 0;
-    ibd.MiscFlags = 0;
-    ibd.StructureByteStride = 0;
+    ////Initializse the index buffer with our data
+    //D3D11_SUBRESOURCE_DATA iInitData;
+    //iInitData.pSysMem = &indices[0];
 
-    //Initializse the index buffer with our data
-    D3D11_SUBRESOURCE_DATA iInitData;
-    iInitData.pSysMem = &indices[0];
-
-    //Create the index buffer
-    m_pDevice->CreateBuffer(&ibd, &iInitData, m_IndexBuffer.GetAddressOf());
-
+    ////Create the index buffer
+    //hr = m_pDevice->CreateBuffer(&ibd, &iInitData, m_IndexBuffer.GetAddressOf());
+    //if (FAILED(hr)) {
+    //    OutputDebugStringA("Unable to create Index Buffer");
+    //    assert(false);
+    //}
 
     OutputDebugStringA("Model Loaded\n");
 
@@ -229,7 +253,9 @@ void Engine::ModelComponent::Init()
     std::wstring textureName;
     textureName = m_TexturePaths.at(0);
 
-    HRESULT hr = DirectX::CreateWICTextureFromFile(m_pDevice.Get(), m_pContext.Get(), textureName.c_str(), nullptr, &m_TextureView);
+    //TODO: Switch based on file extention (one for dds, one for other formats.)
+    //HRESULT hr = DirectX::CreateWICTextureFromFile(m_pDevice.Get(), m_pContext.Get(), textureName.c_str(), nullptr, &m_TextureView);
+    HRESULT hr = DirectX::CreateDDSTextureFromFile(m_pDevice.Get(), m_pContext.Get(), textureName.c_str(), nullptr, &m_TextureView);
     if (FAILED(hr)) {
         //TODO: Do some error handling
         OutputDebugStringA((LPCSTR)textureName.c_str());
@@ -240,6 +266,7 @@ void Engine::ModelComponent::Init()
 
         if (FAILED(hr)) {
             OutputDebugStringA("Unable to load default texture.");
+            assert(false);
         }
     }
 

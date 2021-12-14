@@ -6,8 +6,6 @@ using namespace Engine;
 Engine::Camera::Camera()
 {
     m_ViewMode = ViewMode::VIEW_PERSPECTIVE;
-
-    //TODO: Initialize member variables
     Reset();
 }
 
@@ -233,6 +231,7 @@ void Engine::Camera::SetOrbitalAxis(float radius, float theta, float phi)
     m_Radius = radius;
     m_Theta = theta;
     m_Phi = phi;
+
     //if (radius >= 0.1f) {
     //    m_Radius = radius;
     //}
