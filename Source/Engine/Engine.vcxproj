@@ -23,6 +23,7 @@
     <ClCompile Include="Backend\GameObject.cpp" />
     <ClCompile Include="Backend\Graphics.cpp" />
     <ClCompile Include="Backend\ObjectPool.cpp" />
+    <ClCompile Include="Backend\ResourceAllocator.cpp" />
     <ClCompile Include="Components\AnimatedSpriteComponent.cpp" />
     <ClCompile Include="Components\Camera.cpp" />
     <ClCompile Include="Components\GameComponent.cpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="Backend\GameObject.h" />
     <ClInclude Include="Backend\Graphics.h" />
     <ClInclude Include="Backend\ObjectPool.h" />
+    <ClInclude Include="Backend\ResourceAllocator.h" />
     <ClInclude Include="Components\AnimatedSpriteComponent.h" />
     <ClInclude Include="Components\Camera.h" />
     <ClInclude Include="Components\FPSComponent.h" />
@@ -73,6 +75,13 @@
       <FileType>Document</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\Resources\Effects\Fog.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">FogEnabled</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
     </FxCompile>

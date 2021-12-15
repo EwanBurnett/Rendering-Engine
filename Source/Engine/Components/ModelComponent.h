@@ -14,6 +14,7 @@
 #include "..\Backend\Graphics.h"
 #include "Camera.h"
 #include "../Utils/Model.h"
+#include "../Backend/ResourceAllocator.h"
 #include <memory>
 
 
@@ -65,7 +66,7 @@ namespace Engine {
         std::string m_ModelPath;
         std::vector<std::wstring> m_TexturePaths;
 
-        std::unique_ptr<Model> m_Model;
+        Model* m_Model;
         D3D11_Graphics* m_pGfx;
         ComPtr<ID3D11Device> m_pDevice;
         ComPtr<ID3D11DeviceContext> m_pContext;
@@ -74,7 +75,9 @@ namespace Engine {
         ComPtr<ID3DX11EffectTechnique> m_Technique;
         ComPtr<ID3DX11EffectPass> m_Pass;
         ComPtr<ID3DX11EffectMatrixVariable> m_WVPVar;
-        
+        ComPtr<ID3DX11EffectMatrixVariable> m_WorldVar;
+        ComPtr<ID3DX11EffectVectorVariable> m_CamPosVar;
+
         ComPtr<ID3D11ShaderResourceView> m_TextureView;
         ComPtr<ID3DX11EffectShaderResourceVariable> m_ColorTextureVar;
 

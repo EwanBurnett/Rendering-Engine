@@ -25,11 +25,11 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
 
     //TODO: Load from a Resource file instead
     //TODO: Upgrade to use m_EffectPath variable
-    HRESULT hr = D3DReadFileToBlob(L"..\\..\\Resources\\Effects\\TextureMapping.cso", &compiledShader);
+    HRESULT hr = D3DReadFileToBlob(L"..\\..\\Resources\\Effects\\Fog.cso", &compiledShader);
     if (FAILED(hr)) {
         OutputDebugStringA("Unable to read precompiled shader. Attempting to compile from source file.");
 
-        hr = D3DCompileFromFile(L"..\\..\\Resources\\Effects\\TextureMapping.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
+        hr = D3DCompileFromFile(L"..\\..\\Resources\\Effects\\Fog.fx", nullptr, nullptr, nullptr, "fx_5_0", shaderFlags, 0, &compiledShader, &errorMessages);
         if (FAILED(hr))
         {
             //TODO: Do some error handling
@@ -62,7 +62,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
     compiledShader->Release();
 
     //Retrieving Techniques, passes and variables
-    m_Technique = m_Effect->GetTechniqueByName("main11");
+    m_Technique = m_Effect->GetTechniqueByName("FogEnabled");
     if (m_Technique == nullptr) {
         //TODO: Do some error handling
         OutputDebugStringA("Unable to retrieve technique.\n");
@@ -76,7 +76,7 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
         assert(false);
     }
 
-    ID3DX11EffectVariable* var = m_Effect->GetVariableByName("WorldViewProj");
+    ID3DX11EffectVariable* var = m_Effect->GetVariableBySemantic("WORLDVIEWPROJECTION");
     if (var == nullptr) {
         //TODO: Do some error handling
         OutputDebugStringA("Unable to retrieve Variable WorldViewProj.\n");
@@ -91,7 +91,20 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
         assert(false);
     }
 
-    var = m_Effect->GetVariableByName("ColorTexture");
+    var = m_Effect->GetVariableBySemantic("WORLD");
+    if (var == nullptr) {
+        //TODO: Do some error handling
+        OutputDebugStringA("Shader Variable Cast Failed");
+        assert(false);
+    }
+    m_WorldVar = var->AsMatrix();
+    if (m_WorldVar->IsValid() == false) {
+        //TODO: Do some error handling
+        OutputDebugStringA("Shader Variable Cast Failed");
+        assert(false);
+    }
+
+    var = m_Effect->GetVariableByName("ColourTexture");
     if (var == nullptr) {
         //TODO: Do some error handling
         OutputDebugStringA("Shader Variable Cast Failed");
@@ -105,6 +118,18 @@ Engine::ModelComponent::ModelComponent(D3D11_Graphics* gfx, Camera* cam)
         assert(false);
     }
 
+    var = m_Effect->GetVariableBySemantic("CAMERAPOSITION");
+    if (var == nullptr) {
+        //TODO: Do some error handling
+        OutputDebugStringA("Shader Variable Cast Failed");
+        assert(false);
+    }
+    m_CamPosVar = var->AsVector();
+    if (m_CamPosVar->IsValid() == false) {
+        //TODO: Do some error handling
+        OutputDebugStringA("Shader Variable Cast Failed");
+        assert(false);
+    }
 
     var->Release();
 
@@ -148,7 +173,7 @@ void Engine::ModelComponent::CreateBuffers()
         const std::vector<XMFLOAT3>& vertPos = mesh->Vertices();
         std::vector<std::vector<XMFLOAT4>*> vertClrs = mesh->VertexColours();
         std::vector<std::vector<XMFLOAT3>*> vertTexCoords = mesh->TexCoords();
-
+        std::vector<XMFLOAT3> vertNorms = mesh->Normals();
         
         //verts.reserve(vertPos.size());
         offset += vertPos.size();
@@ -180,6 +205,9 @@ void Engine::ModelComponent::CreateBuffers()
                 v.texCoords.y = vertTexCoords.at(0)->at(i).y;
             }
 
+            if (vertNorms.size() > 0) {
+                v.normal = vertNorms.at(i);
+            }
             verts.push_back(v);
         }
 
@@ -245,31 +273,17 @@ void Engine::ModelComponent::CreateBuffers()
 void Engine::ModelComponent::Init()
 {
     //Load the model
-    m_Model = std::make_unique<Engine::Model>(m_pGfx, m_ModelPath, true);
-
+    //m_Model = std::make_unique<Engine::Model>(m_pGfx, m_ModelPath, true);
+    ResourceAllocator rAlloc(m_pGfx);
+    m_Model = rAlloc.GetModel(m_ModelPath);
     CreateBuffers();
 
     //Load the texture
     std::wstring textureName;
     textureName = m_TexturePaths.at(0);
 
-    //TODO: Switch based on file extention (one for dds, one for other formats.)
-    //HRESULT hr = DirectX::CreateWICTextureFromFile(m_pDevice.Get(), m_pContext.Get(), textureName.c_str(), nullptr, &m_TextureView);
-    HRESULT hr = DirectX::CreateDDSTextureFromFile(m_pDevice.Get(), m_pContext.Get(), textureName.c_str(), nullptr, &m_TextureView);
-    if (FAILED(hr)) {
-        //TODO: Do some error handling
-        OutputDebugStringA((LPCSTR)textureName.c_str());
-        OutputDebugStringA("Unable to load specified texture. Attempting to use default texture instead.");
-
-        //If the original texture can't be loaded, use the default texture instead
-        hr = DirectX::CreateDDSTextureFromFile(m_pDevice.Get(), m_pContext.Get(), L"D:\\University\\Projects\\Year 2\\Rendering Engine\\Build\\Debug\\Resources\\Textures\\DefaultTexture.dds", nullptr, &m_TextureView);
-
-        if (FAILED(hr)) {
-            OutputDebugStringA("Unable to load default texture.");
-            assert(false);
-        }
-    }
-
+    m_TextureView = rAlloc.GetTexture(textureName);
+    
 }
 
 void Engine::ModelComponent::Update(float dt)
@@ -297,12 +311,17 @@ void Engine::ModelComponent::Draw(float dt)
     XMMATRIX wvp = world * m_Camera->GetViewMatrix() * m_Camera->GetProjectionMatrix();
 
     m_WVPVar->SetMatrix(reinterpret_cast<const float*>(&wvp));
+    m_WorldVar->SetMatrix(reinterpret_cast<const float*>(&world));
 
     m_ColorTextureVar->SetResource(m_TextureView.Get());
 
+    XMFLOAT3 camPos3 = m_Camera->Position();
+    XMVECTOR camPos = XMLoadFloat3(&camPos3);
+    m_CamPosVar->SetFloatVector(reinterpret_cast<const float*>(&camPos));
+
+
     m_Pass->Apply(0, m_pContext.Get());
 
-    //m_pContext->Draw(1400, 0);
     m_pContext->DrawIndexed(m_IndexCount, 0, 0);
 }
 

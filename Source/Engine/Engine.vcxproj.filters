@@ -57,6 +57,9 @@
     <ClCompile Include="Components\PrimitiveModelComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Backend\ResourceAllocator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Backend\Demo.h">
@@ -125,6 +128,9 @@
     <ClInclude Include="Utils\AppIncl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Backend\ResourceAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -142,5 +148,6 @@
   <ItemGroup>
     <FxCompile Include="..\..\Build\Debug\Resources\Effects\TextureMapping.fx" />
     <FxCompile Include="..\..\Resources\Effects\BasicEffect.fx" />
+    <FxCompile Include="..\..\Resources\Effects\Fog.fx" />
   </ItemGroup>
 </Project>
